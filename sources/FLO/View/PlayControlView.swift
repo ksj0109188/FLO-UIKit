@@ -7,12 +7,15 @@
 
 import UIKit
 import AVKit
-import AVFoundation
 
 class PlayControlView: UIView {
-    var player: AVPlayer!
-    var playerLayer: AVPlayerLayer!
-    var timeObserverToken: Any?
+    var player: AVPlayer! {
+        didSet {
+            syncComponents()
+        }
+    }
+    private var timeObserverToken: Any?
+    weak var delegate: PlayControlViewDelegate?
     
     private lazy var seekSlider: UISlider = {
         let slider = UISlider()
@@ -42,18 +45,9 @@ class PlayControlView: UIView {
         return label
     }()
     
-    deinit {
-        if let token = timeObserverToken {
-             player.removeTimeObserver(token)
-             timeObserverToken = nil
-         }
-    }
-    
     private override init(frame: CGRect) {
         super.init(frame: frame)
-        setupPlayer()
         setupViews()
-        syncComponents(player: player)
         setConstraints()
     }
     
@@ -61,21 +55,18 @@ class PlayControlView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        if let token = timeObserverToken {
+             player.removeTimeObserver(token)
+             timeObserverToken = nil
+         }
+    }
+    
     private func setupViews() {
         addSubviews(seekSlider, playButton, lyricsLabel)
     }
     
-    private func setupPlayer() {
-        let url = URL(string: "https://grepp-programmers-challenges.s3.ap-northeast-2.amazonaws.com/2020-flo/music.mp3")!
-        player = AVPlayer(url: url)
-        playerLayer = AVPlayerLayer(player: player)
-        playerLayer.frame = bounds
-        
-        layer.addSublayer(playerLayer)
-    }
-    
-    private func syncComponents(player: AVPlayer) {
-        
+    private func syncComponents() {
         let interval = CMTime(seconds: 0.5,
                               preferredTimescale: CMTimeScale(NSEC_PER_SEC))
 
@@ -101,7 +92,6 @@ class PlayControlView: UIView {
                 }
             }
         }
-        
     }
     
     private func setConstraints() {
@@ -122,16 +112,10 @@ class PlayControlView: UIView {
     }
     
     @objc func seekSliderChanged(_ sender: UISlider) {
-        let seconds = Int64(sender.value)
-        let targetTime = CMTimeMake(value: seconds, timescale: 1)
-        player.seek(to: targetTime)
+        delegate?.sliderValueChanged(to: sender.value)
     }
 
     @objc func togglePlayPause() {
-        if player.rate == 0 {
-            player.play()
-        } else {
-            player.pause()
-        }
+        delegate?.togglePlayPause()
     }
 }

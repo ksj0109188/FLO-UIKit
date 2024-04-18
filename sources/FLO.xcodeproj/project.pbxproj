@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3B2E59F62BD12390000443FD /* PlayLyricsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2E59F52BD12390000443FD /* PlayLyricsView.swift */; };
 		3BD5333C2BCCFC3200F1CE3C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD5333B2BCCFC3200F1CE3C /* AppDelegate.swift */; };
 		3BD5333E2BCCFC3200F1CE3C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD5333D2BCCFC3200F1CE3C /* SceneDelegate.swift */; };
 		3BD533402BCCFC3200F1CE3C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD5333F2BCCFC3200F1CE3C /* ViewController.swift */; };
@@ -41,6 +42,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3B2E59F52BD12390000443FD /* PlayLyricsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayLyricsView.swift; sourceTree = "<group>"; };
 		3BD533382BCCFC3200F1CE3C /* FLO.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FLO.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BD5333B2BCCFC3200F1CE3C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3BD5333D2BCCFC3200F1CE3C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -85,6 +87,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3B2E59F72BD1241F000443FD /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				3BD5336C2BCD5BFB00F1CE3C /* Song.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
 		3BD5332F2BCCFC3200F1CE3C = {
 			isa = PBXGroup;
 			children = (
@@ -110,7 +120,7 @@
 			children = (
 				3BD5333B2BCCFC3200F1CE3C /* AppDelegate.swift */,
 				3BD5333D2BCCFC3200F1CE3C /* SceneDelegate.swift */,
-				3BD5336C2BCD5BFB00F1CE3C /* Song.swift */,
+				3B2E59F72BD1241F000443FD /* Data */,
 				3BD533772BCE930C00F1CE3C /* Utilities */,
 				3BD5336B2BCD573300F1CE3C /* View */,
 				3BD533412BCCFC3200F1CE3C /* Main.storyboard */,
@@ -143,6 +153,7 @@
 			children = (
 				3BD5333F2BCCFC3200F1CE3C /* ViewController.swift */,
 				3BD533732BCE533700F1CE3C /* PlayInfoView.swift */,
+				3B2E59F52BD12390000443FD /* PlayLyricsView.swift */,
 				3BD533782BCEB9DA00F1CE3C /* PlayControlView.swift */,
 			);
 			path = View;
@@ -293,6 +304,7 @@
 				3BD5333C2BCCFC3200F1CE3C /* AppDelegate.swift in Sources */,
 				3BD533742BCE533700F1CE3C /* PlayInfoView.swift in Sources */,
 				3BD5333E2BCCFC3200F1CE3C /* SceneDelegate.swift in Sources */,
+				3B2E59F62BD12390000443FD /* PlayLyricsView.swift in Sources */,
 				3BD533792BCEB9DA00F1CE3C /* PlayControlView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

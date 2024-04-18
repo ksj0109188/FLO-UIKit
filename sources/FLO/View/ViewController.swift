@@ -6,31 +6,52 @@
 //
 
 import UIKit
+import AVKit
+
+protocol PlayControlViewDelegate: AnyObject {
+    func togglePlayPause()
+    func sliderValueChanged(to value: Float)
+}
 
 class ViewController: UIViewController {
-    
-    lazy var playView: PlayInfoView = {
+    private var player: AVPlayer!
+    private var playerLayer: AVPlayerLayer!
+   
+    private lazy var playView: PlayInfoView = {
         let playView = PlayInfoView()
         playView.translatesAutoresizingMaskIntoConstraints = false
         
         return playView
     }()
     
-    lazy var playControlView: PlayControlView = {
+    private lazy var playControlView: PlayControlView = {
         let playControlView = PlayControlView()
+        playControlView.player = player
+        playControlView.delegate = self
         playControlView.translatesAutoresizingMaskIntoConstraints = false
         
         return playControlView
     }()
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupPlayer()
         setupViews()
         setupConstraints()
     }
     
     func setupViews() {
         view.addSubviews(playView, playControlView)
+    }
+    
+    private func setupPlayer() {
+        let url = URL(string: "https://grepp-programmers-challenges.s3.ap-northeast-2.amazonaws.com/2020-flo/music.mp3")!
+        player = AVPlayer(url: url)
+        playerLayer = AVPlayerLayer(player: player)
+        playerLayer.frame = view.bounds
+        
+        view.layer.addSublayer(playerLayer)
     }
     
     func setupConstraints() {
@@ -49,7 +70,22 @@ class ViewController: UIViewController {
             playControlView.heightAnchor.constraint(equalTo: safeArea.heightAnchor, multiplier: 0.5)
         ])
     }
+}
+
+extension ViewController: PlayControlViewDelegate {
+    func togglePlayPause() {
+        if player.rate == 0 {
+            player.play()
+        } else {
+            player.pause()
+        }
+    }
     
+    func sliderValueChanged(to value: Float) {
+        let seconds = Int64(value)
+        let targetTime = CMTimeMake(value: seconds, timescale: 1)
+        player.seek(to: targetTime)
+    }
 }
 
 @available(iOS 17.0, *)
