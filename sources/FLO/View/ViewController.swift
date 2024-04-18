@@ -8,15 +8,13 @@
 import UIKit
 import AVKit
 
-protocol PlayControlViewDelegate: AnyObject {
+protocol PlayControlDelegate: AnyObject {
     func togglePlayPause()
     func sliderValueChanged(to value: Float)
 }
 
 class ViewController: UIViewController {
-    private var player: AVPlayer!
-    private var playerLayer: AVPlayerLayer!
-   
+    private var playerManger = PlayerManager()
     private lazy var playView: PlayInfoView = {
         let playView = PlayInfoView()
         playView.translatesAutoresizingMaskIntoConstraints = false
@@ -26,32 +24,21 @@ class ViewController: UIViewController {
     
     private lazy var playControlView: PlayControlView = {
         let playControlView = PlayControlView()
-        playControlView.player = player
         playControlView.delegate = self
+        playControlView.playerManger = playerManger
         playControlView.translatesAutoresizingMaskIntoConstraints = false
         
         return playControlView
-    }()
-    
+    }() 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupPlayer()
         setupViews()
         setupConstraints()
     }
     
     func setupViews() {
         view.addSubviews(playView, playControlView)
-    }
-    
-    private func setupPlayer() {
-        let url = URL(string: "https://grepp-programmers-challenges.s3.ap-northeast-2.amazonaws.com/2020-flo/music.mp3")!
-        player = AVPlayer(url: url)
-        playerLayer = AVPlayerLayer(player: player)
-        playerLayer.frame = view.bounds
-        
-        view.layer.addSublayer(playerLayer)
     }
     
     func setupConstraints() {
@@ -72,19 +59,14 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController: PlayControlViewDelegate {
+extension ViewController: PlayControlDelegate {
     func togglePlayPause() {
-        if player.rate == 0 {
-            player.play()
-        } else {
-            player.pause()
-        }
+        playerManger.player.rate == 0 ? playerManger.player.play() : playerManger.player.pause()
     }
     
     func sliderValueChanged(to value: Float) {
-        let seconds = Int64(value)
-        let targetTime = CMTimeMake(value: seconds, timescale: 1)
-        player.seek(to: targetTime)
+        let targetTime = CMTimeMake(value: Int64(value), timescale: 1)
+        playerManger.player.seek(to: targetTime)
     }
 }
 

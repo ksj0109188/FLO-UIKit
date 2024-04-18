@@ -9,13 +9,14 @@ import UIKit
 import AVKit
 
 class PlayControlView: UIView {
-    var player: AVPlayer! {
+    weak var delegate: PlayControlDelegate?
+    var playerManger: PlayerManager? {
         didSet {
-            syncComponents()
+            playerManger?.observer { [weak self] time in
+                self?.syncUI(time: time)
+            }
         }
     }
-    private var timeObserverToken: Any?
-    weak var delegate: PlayControlViewDelegate?
     
     private lazy var seekSlider: UISlider = {
         let slider = UISlider()
@@ -55,43 +56,8 @@ class PlayControlView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    deinit {
-        if let token = timeObserverToken {
-             player.removeTimeObserver(token)
-             timeObserverToken = nil
-         }
-    }
-    
     private func setupViews() {
         addSubviews(seekSlider, playButton, lyricsLabel)
-    }
-    
-    private func syncComponents() {
-        let interval = CMTime(seconds: 0.5,
-                              preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-
-        timeObserverToken = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) {
-            [weak self] time in
-            
-            self?.seekSlider.value = Float(time.seconds)
-            
-            let milliseconds = Int(CMTimeGetSeconds(time) * 1000)
-            let Lyrics = Song.dummy.transformedLyrics
-            var keys = Array(Lyrics.keys)
-            
-            keys.sort { $0 < $1}
-            
-            if keys.count > 0 {
-                let target = keys.filter { $0 <= milliseconds}.max() ?? 0
-                let targetIndex = keys.firstIndex(of: target)
-                
-                if targetIndex == nil {
-                    self?.lyricsLabel.text = "\(Lyrics[keys[0]] ?? "")\n \(Lyrics[keys[1]] ?? "")"
-                } else if let index = targetIndex, index + 1 < keys.count - 1 {
-                    self?.lyricsLabel.text = "\(Lyrics[keys[index]] ?? "")\n \(Lyrics[keys[index + 1]] ?? "")"
-                }
-            }
-        }
     }
     
     private func setConstraints() {
@@ -109,6 +75,27 @@ class PlayControlView: UIView {
             playButton.leadingAnchor.constraint(equalTo: leadingAnchor),
             playButton.widthAnchor.constraint(equalTo: widthAnchor)
         ])
+    }
+    
+    private func syncUI(time: CMTime) {
+        seekSlider.value = Float(time.seconds)
+        
+        let milliseconds = Int(CMTimeGetSeconds(time) * 1000)
+        let Lyrics = Song.dummy.transformedLyrics
+        var keys = Array(Lyrics.keys)
+        
+        keys.sort { $0 < $1}
+        
+        if keys.count > 0 {
+            let target = keys.filter { $0 <= milliseconds}.max() ?? 0
+            let targetIndex = keys.firstIndex(of: target)
+            
+            if targetIndex == nil {
+                lyricsLabel.text = "\(Lyrics[keys[0]] ?? "")\n \(Lyrics[keys[1]] ?? "")"
+            } else if let index = targetIndex, index + 1 < keys.count - 1 {
+                lyricsLabel.text = "\(Lyrics[keys[index]] ?? "")\n \(Lyrics[keys[index + 1]] ?? "")"
+            }
+        }
     }
     
     @objc func seekSliderChanged(_ sender: UISlider) {
