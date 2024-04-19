@@ -15,21 +15,37 @@ protocol PlayControlDelegate: AnyObject {
 
 class ViewController: UIViewController {
     private var playerManger = PlayerManager()
-    private lazy var playView: PlayInfoView = {
-        let playView = PlayInfoView()
-        playView.translatesAutoresizingMaskIntoConstraints = false
+    
+    private lazy var playInfoView: PlayInfoView = {
+        let view = PlayInfoView()
+        view.translatesAutoresizingMaskIntoConstraints = false
         
-        return playView
+        return view
     }()
     
     private lazy var playControlView: PlayControlView = {
-        let playControlView = PlayControlView()
-        playControlView.delegate = self
-        playControlView.playerManger = playerManger
-        playControlView.translatesAutoresizingMaskIntoConstraints = false
+        let view = PlayControlView()
+        view.delegate = self
+        view.playerManger = playerManger
+        view.translatesAutoresizingMaskIntoConstraints = false
         
-        return playControlView
-    }() 
+        return view
+    }()
+    
+    private lazy var lyricsView: LyricsView = {
+        let view = LyricsView()
+        view.playerManger = playerManger
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
+    //TODO: 터치업 이벤트 발생시 지워야 함
+    private lazy var detailLyricsViewController: DetailLyricsViewController = {
+        let viewController = DetailLyricsViewController()
+        
+        return viewController
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,24 +54,37 @@ class ViewController: UIViewController {
     }
     
     func setupViews() {
-        view.addSubviews(playView, playControlView)
+        view.addSubviews(playInfoView, lyricsView, playControlView)
     }
     
     func setupConstraints() {
         let safeArea = view.safeAreaLayoutGuide
+        let viewFrame = view.bounds
         
         NSLayoutConstraint.activate([
-            playView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-            playView.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            playView.widthAnchor.constraint(equalTo: safeArea.widthAnchor),
-            playView.heightAnchor.constraint(equalTo: safeArea.heightAnchor),
-            
-            playControlView.topAnchor.constraint(equalTo: playView.bottomAnchor),
+            playInfoView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            playInfoView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            playInfoView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            playInfoView.widthAnchor.constraint(equalToConstant: viewFrame.width),
+            playInfoView.heightAnchor.constraint(equalToConstant: viewFrame.height / 2)
+        ])
+        
+        NSLayoutConstraint.activate([
+            lyricsView.topAnchor.constraint(equalTo: playInfoView.bottomAnchor),
+            lyricsView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            lyricsView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            lyricsView.widthAnchor.constraint(equalTo: safeArea.widthAnchor),
+            lyricsView.heightAnchor.constraint(equalToConstant: viewFrame.height / 2)
+        ])
+        
+        NSLayoutConstraint.activate([
+            playControlView.topAnchor.constraint(equalTo: lyricsView.bottomAnchor),
             playControlView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
             playControlView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             playControlView.widthAnchor.constraint(equalTo: safeArea.widthAnchor),
             playControlView.heightAnchor.constraint(equalTo: safeArea.heightAnchor, multiplier: 0.5)
         ])
+        
     }
 }
 

@@ -8,8 +8,6 @@
 import UIKit
 
 class PlayInfoView: UIView {
-    private let padding: CGFloat = 16
-    
     private lazy var albumName: UILabel = {
         let label = UILabel()
         label.text = Song.dummy.album
@@ -51,7 +49,7 @@ class PlayInfoView: UIView {
     private lazy var topInfoView: UIStackView = {
         let topStackView = UIStackView()
         topStackView.axis = .vertical
-        topStackView.spacing = 20.0
+        topStackView.spacing = 5.0
         topStackView.alignment = .center
         topStackView.distribution = .equalSpacing
         topStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -61,8 +59,8 @@ class PlayInfoView: UIView {
     
     private override init(frame: CGRect) {
         super.init(frame: frame)
+        backgroundColor = .blue
         setupViews()
-        setConstraints()
     }
     
     required init?(coder: NSCoder) {
@@ -77,22 +75,27 @@ class PlayInfoView: UIView {
         addSubviews(topInfoView, albumCover)
     }
     
-    func setConstraints() {
-        NSLayoutConstraint.activate([
-            topInfoView.topAnchor.constraint(equalTo: self.topAnchor, constant: 20.0),
-            topInfoView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20.0),
-            topInfoView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20.0),
-            
-            albumCover.topAnchor.constraint(equalTo: self.topInfoView.bottomAnchor, constant: padding),
-            albumCover.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.5),
-            albumCover.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.3),
-            albumCover.centerXAnchor.constraint(equalTo: self.centerXAnchor)
-        ])
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        setupConstraints()
     }
-}
+    
+    func setupConstraints() {
+        let padding: CGFloat = 16
+        let viewFrame = bounds
+        
+        NSLayoutConstraint.activate([
+            topInfoView.topAnchor.constraint(equalTo: topAnchor, constant: 20.0),
+            topInfoView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20.0),
+            topInfoView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20.0),
+//            topInfoView.heightAnchor.constraint(equalToConstant: viewFrame.height/3)
+        ])
 
-extension PlayInfoView {
-    public func configure() {
-//        title.text = Song.dummy.title
+        NSLayoutConstraint.activate([
+            albumCover.topAnchor.constraint(equalTo: topInfoView.bottomAnchor, constant: padding),
+            albumCover.widthAnchor.constraint(equalToConstant: viewFrame.width / 2),
+            albumCover.heightAnchor.constraint(equalToConstant: viewFrame.height / 2),
+            albumCover.centerXAnchor.constraint(equalTo: centerXAnchor)
+        ])
     }
 }

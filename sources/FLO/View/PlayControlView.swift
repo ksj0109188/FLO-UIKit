@@ -10,10 +10,11 @@ import AVKit
 
 class PlayControlView: UIView {
     weak var delegate: PlayControlDelegate?
+    
     var playerManger: PlayerManager? {
         didSet {
             playerManger?.observer { [weak self] time in
-                self?.syncUI(time: time)
+                self?.updateUI(time: time)
             }
         }
     }
@@ -37,19 +38,9 @@ class PlayControlView: UIView {
         return button
     }()
     
-    private lazy var lyricsLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 2
-        label.layer.borderColor = CGColor.init(red: 10.0, green: 10.0, blue: 10.0, alpha: 0.0)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        
-        return label
-    }()
-    
     private override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
-        setConstraints()
     }
     
     required init?(coder: NSCoder) {
@@ -57,16 +48,17 @@ class PlayControlView: UIView {
     }
     
     private func setupViews() {
-        addSubviews(seekSlider, playButton, lyricsLabel)
+        addSubviews(seekSlider, playButton)
     }
     
-    private func setConstraints() {
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        setupConstraints()
+    }
+    
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
-            lyricsLabel.topAnchor.constraint(equalTo: topAnchor),
-            lyricsLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            lyricsLabel.widthAnchor.constraint(equalTo: widthAnchor),
-            
-            seekSlider.topAnchor.constraint(equalTo: lyricsLabel.bottomAnchor),
+            seekSlider.topAnchor.constraint(equalTo: topAnchor),
             seekSlider.leadingAnchor.constraint(equalTo: leadingAnchor),
             seekSlider.widthAnchor.constraint(equalTo: widthAnchor),
             
@@ -77,25 +69,8 @@ class PlayControlView: UIView {
         ])
     }
     
-    private func syncUI(time: CMTime) {
+    private func updateUI(time: CMTime) {
         seekSlider.value = Float(time.seconds)
-        
-        let milliseconds = Int(CMTimeGetSeconds(time) * 1000)
-        let Lyrics = Song.dummy.transformedLyrics
-        var keys = Array(Lyrics.keys)
-        
-        keys.sort { $0 < $1}
-        
-        if keys.count > 0 {
-            let target = keys.filter { $0 <= milliseconds}.max() ?? 0
-            let targetIndex = keys.firstIndex(of: target)
-            
-            if targetIndex == nil {
-                lyricsLabel.text = "\(Lyrics[keys[0]] ?? "")\n \(Lyrics[keys[1]] ?? "")"
-            } else if let index = targetIndex, index + 1 < keys.count - 1 {
-                lyricsLabel.text = "\(Lyrics[keys[index]] ?? "")\n \(Lyrics[keys[index + 1]] ?? "")"
-            }
-        }
     }
     
     @objc func seekSliderChanged(_ sender: UISlider) {
