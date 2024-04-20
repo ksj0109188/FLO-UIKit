@@ -38,16 +38,12 @@ final class ViewController: UIViewController {
         view.playerManger = playerManger
         view.translatesAutoresizingMaskIntoConstraints = false
         
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(showDetailLyricsView))
+        view.addGestureRecognizer(gestureRecognizer)
+        
         return view
     }()
-    
-    //TODO: 터치업 이벤트 발생시 지워야 함
-    private lazy var detailLyricsViewController: DetailLyricsViewController = {
-        let viewController = DetailLyricsViewController()
-        
-        return viewController
-    }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
@@ -85,8 +81,16 @@ final class ViewController: UIViewController {
             playControlView.widthAnchor.constraint(equalTo: safeArea.widthAnchor),
             playControlView.heightAnchor.constraint(equalTo: safeArea.heightAnchor, multiplier: 0.5)
         ])
-        
     }
+    
+    @objc func showDetailLyricsView() {
+        let viewController = DetailLyricsViewController()
+        viewController.playerManger = playerManger
+        viewController.modalPresentationStyle = .overFullScreen
+        
+        present(viewController, animated: false)
+    }
+    
 }
 
 extension ViewController: PlayControlDelegate {

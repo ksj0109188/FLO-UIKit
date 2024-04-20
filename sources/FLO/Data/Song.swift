@@ -22,17 +22,17 @@ struct Song {
 extension Song {
     var transformedLyrics: [Int:String] {
         var lyricsDict = [Int: String]()
-              let lines = lyrics.components(separatedBy: "\n")
-              for line in lines {
-                  let components = line.components(separatedBy: "]")
-                  if components.count > 1, let timeString = components.first?.trimmingCharacters(in: CharacterSet(charactersIn: "[")),
-                     let lyrics = components.last {
-                      
-                      if let milliseconds = Song.convertTimeToMilliseconds(timeString) {
-                          lyricsDict[milliseconds] = lyrics
-                      }
-                  }
-              }
+        let lines = lyrics.components(separatedBy: "\n")
+        for line in lines {
+            let components = line.components(separatedBy: "]")
+            if components.count > 1,
+               let timeString = components.first?.trimmingCharacters(in: CharacterSet(charactersIn: "[")),
+               let lyrics = components.last {
+                if let milliseconds = Song.convertTimeToMilliseconds(timeString) {
+                    lyricsDict[milliseconds] = lyrics
+                }
+            }
+        }
         return lyricsDict
     }
     
