@@ -13,7 +13,8 @@ protocol PlayControlDelegate: AnyObject {
     func sliderValueChanged(to value: Float)
 }
 
-class ViewController: UIViewController {
+final class ViewController: UIViewController {
+    
     private var playerManger = PlayerManager()
     
     private lazy var playInfoView: PlayInfoView = {
