@@ -8,8 +8,11 @@
 import UIKit
 import AVKit
 
+//TODO: playerManger delegate pattern 사용 필요
 class DetailLyricsViewController: UITableViewController {
     let viewModelData = Song.dummy
+    var prevIndex = 0
+    
     var playerManger: PlayerManager? {
         didSet {
             playerManger?.observer { [weak self] time in
@@ -46,25 +49,22 @@ class DetailLyricsViewController: UITableViewController {
         if keys.count > 0 {
             let target = keys.filter { $0 <= milliseconds}.max() ?? 0
             let targetIndex = keys.firstIndex(of: target) ?? 0 // 현재 재생중인 cell의 인덱스
-            
+            print("prevIndex", prevIndex)
+            print("targetIndex", targetIndex)
             if let visibleIndexPaths = tableView.indexPathsForVisibleRows, visibleIndexPaths.contains(IndexPath(row: targetIndex, section: 0)) {
                 
-                if targetIndex > 0, let prevCell = tableView.cellForRow(at: IndexPath(row: targetIndex - 1, section: 0)) as? LyricsCell {
+                if let prevCell = tableView.cellForRow(at: IndexPath(row: prevIndex, section: 0)) as? LyricsCell {
                     prevCell.unHighlihg()
-                    tableView.reloadRows(at: [IndexPath(row: targetIndex - 1, section: 0)], with: .none)
                 }
                 
                 if let cell = tableView.cellForRow(at: IndexPath(row: targetIndex, section: 0)) as? LyricsCell {
                     // 셀의 UI를 업데이트
+                    prevIndex = targetIndex
                     cell.highlight()
-                    tableView.reloadRows(at: [IndexPath(row: targetIndex, section: 0)], with: .none)
                 }
             }
             
-        
-            
         }
-        
     }
     
 }
@@ -76,23 +76,33 @@ extension DetailLyricsViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         guard let cell = tableView.dequeueReusableCell(withIdentifier: LyricsCell.reuseIdentifier, for: indexPath) as? LyricsCell else { return UITableViewCell() }
         
-        let Lyrics = Song.dummy.transformedLyrics
+        let Lyrics = viewModelData.transformedLyrics
         var keys = Array(Lyrics.keys)
         
         keys.sort { $0 < $1}
         let key = keys[indexPath.row]
-        cell.configure(timeLine: key, lyrics: Lyrics[key] ?? "Empty")
+        cell.configure(lyrics: Lyrics[key] ?? "Empty")
+        cell.unHighlihg()
         
         return cell
     }
     
     // MARK: delegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let lyrics = viewModelData.transformedLyrics
+        var keys = Array(lyrics.keys)
+        keys.sort { $0 < $1 }
         
+        let key = keys[indexPath.row]
+        let second = key / 1000
+//        print(key)
+//        print(second)
+       
+        playerManger?.player.seek(to: CMTimeMake(value: Int64(second), timescale: 1))
     }
+    
 }
 
 @available(iOS 17.0, *)

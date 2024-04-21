@@ -9,7 +9,7 @@ import UIKit
 
 class LyricsCell: UITableViewCell {
     static let reuseIdentifier = String(describing: LyricsCell.self)
-    
+
     private lazy var lyricsLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -25,7 +25,7 @@ class LyricsCell: UITableViewCell {
     }
     
     
-    func configure(timeLine: Int, lyrics: String) {
+    func configure(lyrics: String) {
         lyricsLabel.text = lyrics
     }
     
@@ -41,8 +41,8 @@ class LyricsCell: UITableViewCell {
         NSLayoutConstraint.activate([
             lyricsLabel.topAnchor.constraint(equalTo: contentView.topAnchor),
             lyricsLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            lyricsLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-            lyricsLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20)
+            lyricsLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            lyricsLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
         ])
     }
     
