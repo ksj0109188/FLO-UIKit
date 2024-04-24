@@ -13,7 +13,7 @@ protocol PlayControlDelegate: AnyObject {
     func sliderValueChanged(to value: Float)
 }
 
-final class ViewController: UIViewController {
+final class PlaySongSceneViewController: UIViewController {
     
     private var playerManger = PlayerManager()
     
@@ -33,8 +33,8 @@ final class ViewController: UIViewController {
         return view
     }()
     
-    private lazy var lyricsView: LyricsView = {
-        let view = LyricsView()
+    private lazy var lyricsView: PlayLyricsView = {
+        let view = PlayLyricsView()
         view.playerManger = playerManger
         view.translatesAutoresizingMaskIntoConstraints = false
         
@@ -93,7 +93,7 @@ final class ViewController: UIViewController {
     
 }
 
-extension ViewController: PlayControlDelegate {
+extension PlaySongSceneViewController: PlayControlDelegate {
     func togglePlayPause() {
         playerManger.player.rate == 0 ? playerManger.player.play() : playerManger.player.pause()
     }
@@ -106,5 +106,5 @@ extension ViewController: PlayControlDelegate {
 
 @available(iOS 17.0, *)
 #Preview {
-    ViewController()
+    PlaySongSceneViewController()
 }

@@ -7,8 +7,8 @@
 
 import UIKit
 
-class LyricsCell: UITableViewCell {
-    static let reuseIdentifier = String(describing: LyricsCell.self)
+class DetailLyricsCell: UITableViewCell {
+    static let reuseIdentifier = String(describing: DetailLyricsCell.self)
 
     private lazy var lyricsLabel: UILabel = {
         let label = UILabel()

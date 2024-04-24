@@ -8,7 +8,7 @@
 import UIKit
 import AVKit
 
-class LyricsView: UIView {
+class PlayLyricsView: UIView {
     var playerManger: PlayerManager? {
         didSet {
             playerManger?.observer { [weak self] time in

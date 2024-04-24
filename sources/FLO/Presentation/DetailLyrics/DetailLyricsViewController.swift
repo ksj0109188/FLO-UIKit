@@ -35,7 +35,7 @@ class DetailLyricsViewController: UITableViewController {
     
     func setupViews() {
         tableView.separatorStyle = .none
-        tableView.register(LyricsCell.self, forCellReuseIdentifier: LyricsCell.reuseIdentifier)
+        tableView.register(DetailLyricsCell.self, forCellReuseIdentifier: DetailLyricsCell.reuseIdentifier)
         view.addSubviews(dismissButton)
     }
     
@@ -53,11 +53,11 @@ class DetailLyricsViewController: UITableViewController {
             print("targetIndex", targetIndex)
             if let visibleIndexPaths = tableView.indexPathsForVisibleRows, visibleIndexPaths.contains(IndexPath(row: targetIndex, section: 0)) {
                 
-                if let prevCell = tableView.cellForRow(at: IndexPath(row: prevIndex, section: 0)) as? LyricsCell {
+                if let prevCell = tableView.cellForRow(at: IndexPath(row: prevIndex, section: 0)) as? DetailLyricsCell {
                     prevCell.unHighlihg()
                 }
                 
-                if let cell = tableView.cellForRow(at: IndexPath(row: targetIndex, section: 0)) as? LyricsCell {
+                if let cell = tableView.cellForRow(at: IndexPath(row: targetIndex, section: 0)) as? DetailLyricsCell {
                     // 셀의 UI를 업데이트
                     prevIndex = targetIndex
                     cell.highlight()
@@ -76,7 +76,7 @@ extension DetailLyricsViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: LyricsCell.reuseIdentifier, for: indexPath) as? LyricsCell else { return UITableViewCell() }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: DetailLyricsCell.reuseIdentifier, for: indexPath) as? DetailLyricsCell else { return UITableViewCell() }
         
         let Lyrics = viewModelData.transformedLyrics
         var keys = Array(Lyrics.keys)
