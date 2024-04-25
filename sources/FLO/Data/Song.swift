@@ -9,7 +9,7 @@ import Foundation
 import AVKit
 import AVFoundation
 
-struct Song {
+struct Song: Decodable {
     let singer: String
     let album: String
     let title: String

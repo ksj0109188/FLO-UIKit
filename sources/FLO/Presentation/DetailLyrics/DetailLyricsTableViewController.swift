@@ -9,7 +9,7 @@ import UIKit
 import AVKit
 
 //TODO: playerManger delegate pattern 사용 필요
-class DetailLyricsViewController: UITableViewController {
+class DetailLyricsTableViewController: UITableViewController {
     let viewModelData = Song.dummy
     var prevIndex = 0
     
@@ -69,7 +69,7 @@ class DetailLyricsViewController: UITableViewController {
     
 }
 
-extension DetailLyricsViewController {
+extension DetailLyricsTableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModelData.transformedLyrics.count
@@ -107,5 +107,5 @@ extension DetailLyricsViewController {
 
 @available(iOS 17.0, *)
 #Preview {
-    DetailLyricsViewController()
+    DetailLyricsTableViewController()
 }

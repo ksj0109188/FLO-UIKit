@@ -84,7 +84,7 @@ final class PlaySongSceneViewController: UIViewController {
     }
     
     @objc func showDetailLyricsView() {
-        let viewController = DetailLyricsViewController()
+        let viewController = DetailLyricsTableViewController()
         viewController.playerManger = playerManger
         viewController.modalPresentationStyle = .overFullScreen
         

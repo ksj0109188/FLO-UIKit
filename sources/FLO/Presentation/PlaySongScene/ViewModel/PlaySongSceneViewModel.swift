@@ -7,6 +7,6 @@
 
 import Foundation
 
-final class ViewModel {
-    
+final class PlaySongSceneViewModel {
+    private let playManger = PlayerManager()
 }
