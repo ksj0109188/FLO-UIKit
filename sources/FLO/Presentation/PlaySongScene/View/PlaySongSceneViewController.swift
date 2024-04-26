@@ -14,8 +14,12 @@ protocol PlayControlDelegate: AnyObject {
 }
 
 final class PlaySongSceneViewController: UIViewController {
-    
+    private var viewModel: PlaySongSceneViewModel?
     private var playerManger = PlayerManager()
+    
+    func create(viewModel: PlaySongSceneViewModel) {
+        self.viewModel = viewModel
+    }
     
     private lazy var playInfoView: PlayInfoView = {
         let view = PlayInfoView()
@@ -104,7 +108,7 @@ extension PlaySongSceneViewController: PlayControlDelegate {
     }
 }
 
-@available(iOS 17.0, *)
-#Preview {
-    PlaySongSceneViewController()
-}
+//@available(iOS 17.0, *)
+//#Preview {
+//    PlaySongSceneViewController(viewModel: PlaySongSceneViewModel(fetchSongUseCase: FetchSongUseCase(songWebRepository: RealSongWebRepository(config: AppConfigurations()))))
+//}

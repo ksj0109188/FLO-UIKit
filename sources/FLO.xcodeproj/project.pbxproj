@@ -18,6 +18,7 @@
 		3B94ACE32BD926AF00C17F08 /* PlaySongSceneDIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B94ACDF2BD926AF00C17F08 /* PlaySongSceneDIContainer.swift */; };
 		3B94ACE72BD926C200C17F08 /* AppFlowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B94ACE42BD926C200C17F08 /* AppFlowCoordinator.swift */; };
 		3B94ACE82BD926C200C17F08 /* AppConfigurations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B94ACE52BD926C200C17F08 /* AppConfigurations.swift */; };
+		3B94ACF22BDA9D3700C17F08 /* FetchSongUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B94ACF12BDA9D3700C17F08 /* FetchSongUseCase.swift */; };
 		3BB3B0232BD258B200CBE341 /* PlaySongSceneViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BB3B0222BD258B200CBE341 /* PlaySongSceneViewModel.swift */; };
 		3BB3B0272BD3CA5600CBE341 /* DetailLyricsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BB3B0262BD3CA5600CBE341 /* DetailLyricsTableViewController.swift */; };
 		3BD5333C2BCCFC3200F1CE3C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD5333B2BCCFC3200F1CE3C /* AppDelegate.swift */; };
@@ -64,6 +65,7 @@
 		3B94ACDF2BD926AF00C17F08 /* PlaySongSceneDIContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaySongSceneDIContainer.swift; sourceTree = "<group>"; };
 		3B94ACE42BD926C200C17F08 /* AppFlowCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppFlowCoordinator.swift; sourceTree = "<group>"; };
 		3B94ACE52BD926C200C17F08 /* AppConfigurations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppConfigurations.swift; sourceTree = "<group>"; };
+		3B94ACF12BDA9D3700C17F08 /* FetchSongUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchSongUseCase.swift; sourceTree = "<group>"; };
 		3BB3B0222BD258B200CBE341 /* PlaySongSceneViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaySongSceneViewModel.swift; sourceTree = "<group>"; };
 		3BB3B0262BD3CA5600CBE341 /* DetailLyricsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailLyricsTableViewController.swift; sourceTree = "<group>"; };
 		3BD533382BCCFC3200F1CE3C /* FLO.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FLO.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -112,7 +114,7 @@
 		3B2E59F72BD1241F000443FD /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				3BD5336C2BCD5BFB00F1CE3C /* Song.swift */,
+				3B94ACDA2BD9268800C17F08 /* Infrastructure */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -209,6 +211,31 @@
 			path = DIContainer;
 			sourceTree = "<group>";
 		};
+		3B94ACEC2BDA9C0600C17F08 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				3B94ACF02BDA9D0B00C17F08 /* UseCases */,
+				3B94ACED2BDA9C5500C17F08 /* Entities */,
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		3B94ACED2BDA9C5500C17F08 /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				3BD5336C2BCD5BFB00F1CE3C /* Song.swift */,
+			);
+			path = Entities;
+			sourceTree = "<group>";
+		};
+		3B94ACF02BDA9D0B00C17F08 /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				3B94ACF12BDA9D3700C17F08 /* FetchSongUseCase.swift */,
+			);
+			path = UseCases;
+			sourceTree = "<group>";
+		};
 		3BD5332F2BCCFC3200F1CE3C = {
 			isa = PBXGroup;
 			children = (
@@ -232,8 +259,8 @@
 		3BD5333A2BCCFC3200F1CE3C /* FLO */ = {
 			isa = PBXGroup;
 			children = (
-				3B94ACDA2BD9268800C17F08 /* Infrastructure */,
 				3B94ACDC2BD9269E00C17F08 /* Application */,
+				3B94ACEC2BDA9C0600C17F08 /* Domain */,
 				3B2E59F72BD1241F000443FD /* Data */,
 				3BD533772BCE930C00F1CE3C /* Utilities */,
 				3BD5336B2BCD573300F1CE3C /* Presentation */,
@@ -420,6 +447,7 @@
 				3BB3B0232BD258B200CBE341 /* PlaySongSceneViewModel.swift in Sources */,
 				3B94ACD72BD9266A00C17F08 /* WebRepository.swift in Sources */,
 				3BD533402BCCFC3200F1CE3C /* PlaySongSceneViewController.swift in Sources */,
+				3B94ACF22BDA9D3700C17F08 /* FetchSongUseCase.swift in Sources */,
 				3BD5333C2BCCFC3200F1CE3C /* AppDelegate.swift in Sources */,
 				3BB3B0272BD3CA5600CBE341 /* DetailLyricsTableViewController.swift in Sources */,
 				3BD533742BCE533700F1CE3C /* PlayInfoView.swift in Sources */,
@@ -600,7 +628,7 @@
 		3BD533632BCCFC3600F1CE3C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				APIBaseURL = "https://grepp-programmers-challenges.s3.ap-northeast-2.amazonaws.com/2020-flo/song.json";
+				APIBaseURL = "https://grepp-programmers-challenges.s3.ap-northeast-2.amazonaws.com/2020-flo";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -633,7 +661,7 @@
 		3BD533642BCCFC3600F1CE3C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				APIBaseURL = "https://grepp-programmers-challenges.s3.ap-northeast-2.amazonaws.com/2020-flo/song.json";
+				APIBaseURL = "https://grepp-programmers-challenges.s3.ap-northeast-2.amazonaws.com/2020-flo";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
