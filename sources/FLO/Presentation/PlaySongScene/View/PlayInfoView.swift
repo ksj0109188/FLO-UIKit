@@ -8,9 +8,9 @@
 import UIKit
 
 class PlayInfoView: UIView {
+    
     private lazy var albumName: UILabel = {
         let label = UILabel()
-        label.text = Song.dummy.album
         label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -29,7 +29,6 @@ class PlayInfoView: UIView {
     
     private lazy var title: UILabel = {
         let label = UILabel()
-        label.text = Song.dummy.title
         label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -39,7 +38,6 @@ class PlayInfoView: UIView {
     
     private lazy var signerName: UILabel = {
         let label = UILabel()
-        label.text = Song.dummy.singer
         label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -78,6 +76,12 @@ class PlayInfoView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         setupConstraints()
+    }
+    
+    func fill(with song: Song){
+        albumName.text = song.album
+        title.text = song.title
+        signerName.text = song.singer
     }
     
     func setupConstraints() {

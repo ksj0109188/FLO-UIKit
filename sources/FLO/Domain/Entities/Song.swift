@@ -50,9 +50,9 @@ extension Song {
 
 extension Song {
     static var dummy = Song(
-        singer: "챔버오케스트라",
-        album: "캐롤 모음",
-        title: "We Wish You A Merry Christmas",
+        singer: "Dummy Singer",
+        album: "Dummy Album",
+        title: "Dummy Title",
         duration: 198,
         image: "https://grepp-programmers-challenges.s3.ap-northeast-2.amazonaws.com/2020-flo/cover.jpg",
         file: "https://grepp-programmers-challenges.s3.ap-northeast-2.amazonaws.com/2020-flo/music.mp3",

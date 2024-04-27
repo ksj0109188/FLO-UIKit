@@ -7,6 +7,7 @@
 
 import UIKit
 import AVKit
+import Combine
 
 protocol PlayControlDelegate: AnyObject {
     func togglePlayPause()
@@ -14,8 +15,8 @@ protocol PlayControlDelegate: AnyObject {
 }
 
 final class PlaySongSceneViewController: UIViewController {
+    private var subscriptions =  Set<AnyCancellable>()
     private var viewModel: PlaySongSceneViewModel?
-    private var playerManger = PlayerManager()
     
     func create(viewModel: PlaySongSceneViewModel) {
         self.viewModel = viewModel
@@ -24,6 +25,11 @@ final class PlaySongSceneViewController: UIViewController {
     private lazy var playInfoView: PlayInfoView = {
         let view = PlayInfoView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        viewModel?.songSubject
+            .sink(receiveValue: {
+                view.fill(with: $0)
+            })
+            .store(in: &subscriptions)
         
         return view
     }()
@@ -31,7 +37,7 @@ final class PlaySongSceneViewController: UIViewController {
     private lazy var playControlView: PlayControlView = {
         let view = PlayControlView()
         view.delegate = self
-        view.playerManger = playerManger
+        view.playerManger = viewModel?.playerManger
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
@@ -39,7 +45,6 @@ final class PlaySongSceneViewController: UIViewController {
     
     private lazy var lyricsView: PlayLyricsView = {
         let view = PlayLyricsView()
-        view.playerManger = playerManger
         view.translatesAutoresizingMaskIntoConstraints = false
         
         let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(showDetailLyricsView))
@@ -89,7 +94,7 @@ final class PlaySongSceneViewController: UIViewController {
     
     @objc func showDetailLyricsView() {
         let viewController = DetailLyricsTableViewController()
-        viewController.playerManger = playerManger
+        viewController.playerManger = viewModel?.playerManger
         viewController.modalPresentationStyle = .overFullScreen
         
         present(viewController, animated: false)
@@ -99,12 +104,15 @@ final class PlaySongSceneViewController: UIViewController {
 
 extension PlaySongSceneViewController: PlayControlDelegate {
     func togglePlayPause() {
-        playerManger.player.rate == 0 ? playerManger.player.play() : playerManger.player.pause()
+        if let player = viewModel?.playerManger.player {
+            player.rate == 0 ? player.play() : player.pause()
+        }
     }
     
     func sliderValueChanged(to value: Float) {
         let targetTime = CMTimeMake(value: Int64(value), timescale: 1)
-        playerManger.player.seek(to: targetTime)
+        viewModel?.playerManger.player.seek(to: targetTime)
+        
     }
 }
 

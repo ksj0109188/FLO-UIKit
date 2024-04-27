@@ -8,11 +8,10 @@
 import Foundation
 import Combine
 
-
 ///note: FlowCoordinator 정의한 화면 흐름을 실행
-struct Actions {
-    func makeDetailLyricsTableViewController() 
-}
+//struct Actions {
+//    func makeDetailLyricsTableViewController()
+//}
 
 ///note: ViewController에서 ViewModel한테 입력 이벤트 전달
 protocol PlaySongSceneViewModelInput {
@@ -21,15 +20,17 @@ protocol PlaySongSceneViewModelInput {
 
 ///note: ViewModel에서 방출 할 수 있는 Output
 protocol PlaySongSceneViewModelOutput {
-    var song: Song? { get set}
+    var songSubject : PassthroughSubject<Song, Never> { get set }
 }
 
 typealias PlaySongSceneViewModelInOutput = PlaySongSceneViewModelInput & PlaySongSceneViewModelOutput
 
 final class PlaySongSceneViewModel: PlaySongSceneViewModelInOutput {
-    private let playManger = PlayerManager()
+    let playerManger = PlayerManager()
     private let fetchSongUseCase: FetchSongUseCase
-    var song: Song?
+    private var song: Song?
+    var songSubject = PassthroughSubject<Song, Never>()
+    
     var subscription = Set<AnyCancellable>()
     
     init(fetchSongUseCase: FetchSongUseCase) {
@@ -44,15 +45,17 @@ final class PlaySongSceneViewModel: PlaySongSceneViewModelInOutput {
                     case .finished:
                         break
                     case .failure(let failure):
-                        fatalError(failure.localizedDescription)
+                        debugPrint(failure.localizedDescription)
                 }
             }, receiveValue: { [weak self] in
                 self?.song = $0
+                self?.songSubject.send($0)
             })
             .store(in: &subscription)
     }
     
-    
-    
+//    func observe() -> AnyPublisher<Song, Never> {
+//        song.publisher.eraseToAnyPublisher()
+//    }
     
 }
