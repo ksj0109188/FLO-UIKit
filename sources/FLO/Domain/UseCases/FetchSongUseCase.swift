@@ -15,7 +15,7 @@ final class FetchSongUseCase {
         self.songWebRepository = songWebRepository
     }
     
-    func fetchData() -> AnyPublisher<Song, Error> {
+    func fetchData() -> AnyPublisher<SongDTO, Error> {
         songWebRepository.loadSong()
     }
     

@@ -78,7 +78,7 @@ class PlayInfoView: UIView {
         setupConstraints()
     }
     
-    func fill(with song: Song){
+    func configure(with song: SongDTO){
         albumName.text = song.album
         title.text = song.title
         signerName.text = song.singer

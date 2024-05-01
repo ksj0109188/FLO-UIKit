@@ -9,18 +9,28 @@ import UIKit
 import AVKit
 
 class PlayLyricsView: UIView {
-    var playerManger: PlayerManager? {
+    var viewModel: PlaySongSceneViewModel! {
         didSet {
-            playerManger?.observer { [weak self] time in
+            viewModel.playerManger.observer { [weak self] time in
                 self?.updateUI(time: time)
             }
         }
     }
     
-    private lazy var lyricsLabel: UILabel = {
+    private lazy var firstLyricsLabel: UILabel = {
         let label = UILabel()
-        label.text = "Start!!!"
-        label.numberOfLines = 2
+        label.text = " "
+        label.numberOfLines = 1
+        label.layer.borderColor = CGColor.init(red: 10.0, green: 10.0, blue: 10.0, alpha: 0.0)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    private lazy var secondLyricsLabel: UILabel = {
+        let label = UILabel()
+        label.text = " "
+        label.numberOfLines = 1
         label.layer.borderColor = CGColor.init(red: 10.0, green: 10.0, blue: 10.0, alpha: 0.0)
         label.translatesAutoresizingMaskIntoConstraints = false
         
@@ -37,41 +47,76 @@ class PlayLyricsView: UIView {
     }
     
     func setupViews() {
-        addSubviews(lyricsLabel)
+        addSubviews(firstLyricsLabel, secondLyricsLabel)
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         setupConstraints()
     }
+
     
     func setupConstraints() {
         NSLayoutConstraint.activate([
-            lyricsLabel.topAnchor.constraint(equalTo: topAnchor),
-            lyricsLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            lyricsLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            lyricsLabel.widthAnchor.constraint(equalTo: widthAnchor),
-            lyricsLabel.heightAnchor.constraint(equalTo: heightAnchor)
+            firstLyricsLabel.topAnchor.constraint(equalTo: topAnchor),
+            firstLyricsLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
+            firstLyricsLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
+            firstLyricsLabel.widthAnchor.constraint(equalTo: widthAnchor),
+            firstLyricsLabel.heightAnchor.constraint(equalTo: heightAnchor),
+            
+            secondLyricsLabel.topAnchor.constraint(equalTo: firstLyricsLabel.bottomAnchor),
+            secondLyricsLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
+            secondLyricsLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
+            secondLyricsLabel.widthAnchor.constraint(equalTo: widthAnchor),
+            secondLyricsLabel.heightAnchor.constraint(equalTo: heightAnchor)
         ])
     }
     
-    private func updateUI(time: CMTime) {
-        let milliseconds = Int(CMTimeGetSeconds(time) * 1000)
-        let Lyrics = Song.dummy.transformedLyrics
-        var keys = Array(Lyrics.keys)
-        
-        keys.sort { $0 < $1}
-        
-        if keys.count > 0 {
-            let target = keys.filter { $0 <= milliseconds}.max() ?? 0
-            let targetIndex = keys.firstIndex(of: target)
-            
-            if targetIndex == nil {
-                lyricsLabel.text = "\(Lyrics[keys[0]] ?? "")\n \(Lyrics[keys[1]] ?? "")"
-            } else if let index = targetIndex, index + 1 < keys.count - 1 {
-                lyricsLabel.text = "\(Lyrics[keys[index]] ?? "")\n \(Lyrics[keys[index + 1]] ?? "")"
-            }
+    func configure(with songDTO: SongDTO) {
+        let timeLineLyrics = songDTO.timeLineLyrics
+        let transformedLyrics = songDTO.transformedLyrics
+    
+        if timeLineLyrics.count > 0 {
+            firstLyricsLabel.text = transformedLyrics[timeLineLyrics[0]]
+            secondLyricsLabel.text = transformedLyrics[timeLineLyrics[1]]
         }
+    }
+    
+    private func updateUI(time: CMTime = CMTime(value: CMTimeValue(0.0), timescale: 1)) {
+        let lyrics = viewModel.syncLyrics(time: time, inputTimeType: .seconds)
+        //TODO: Font상수화나 extension으로 별도 파일로 관리하기
+        if lyrics.count == 2 {
+            if lyrics[0].1 == .HighLight {
+                firstLyricsLabel.font = .boldSystemFont(ofSize: 16)
+                secondLyricsLabel.font = .systemFont(ofSize: 16)
+            } else if lyrics[1].1 == .HighLight {
+                firstLyricsLabel.font = .systemFont(ofSize: 16)
+                secondLyricsLabel.font = .boldSystemFont(ofSize: 16)
+            } else {
+                firstLyricsLabel.font = .systemFont(ofSize: 16)
+                secondLyricsLabel.font = .systemFont(ofSize: 16)
+            }
+            
+            firstLyricsLabel.text = lyrics[0].0
+            secondLyricsLabel.text = lyrics[1].0
+        }
+        
+        
+        
+//        var keys = Array(Lyrics.keys)
+//        
+//        keys.sort { $0 < $1}
+//        
+//        if keys.count > 0 {
+//            let target = keys.filter { $0 <= milliseconds}.max() ?? 0
+//            let targetIndex = keys.firstIndex(of: target)
+//            
+//            if targetIndex == nil {
+//                lyricsLabel.text = "\(Lyrics[keys[0]] ?? "")\n \(Lyrics[keys[1]] ?? "")"
+//            } else if let index = targetIndex, index + 1 < keys.count - 1 {
+//                lyricsLabel.text = "\(Lyrics[keys[index]] ?? "")\n \(Lyrics[keys[index + 1]] ?? "")"
+//            }
+//        }
     }
     
 }

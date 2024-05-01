@@ -10,10 +10,9 @@ import AVKit
 
 class PlayControlView: UIView {
     weak var delegate: PlayControlDelegate?
-    
-    var playerManger: PlayerManager? {
+    var viewModel: PlaySongSceneViewModel! {
         didSet {
-            playerManger?.observer { [weak self] time in
+            viewModel.playerManger.observer { [weak self] time in
                 self?.updateUI(time: time)
             }
         }
@@ -22,7 +21,6 @@ class PlayControlView: UIView {
     private lazy var seekSlider: UISlider = {
         let slider = UISlider()
         slider.minimumValue = 0.0
-        slider.maximumValue = Float(Song.dummy.duration)
         slider.addTarget(self, action: #selector(seekSliderChanged(_:)), for: .valueChanged)
         slider.translatesAutoresizingMaskIntoConstraints = false
         
@@ -54,6 +52,10 @@ class PlayControlView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         setupConstraints()
+    }
+    
+    func configure(with songDTO: SongDTO) {
+        seekSlider.maximumValue = Float(songDTO.duration)
     }
     
     private func setupConstraints() {

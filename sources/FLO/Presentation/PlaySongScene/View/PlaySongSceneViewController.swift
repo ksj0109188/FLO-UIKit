@@ -16,7 +16,7 @@ protocol PlayControlDelegate: AnyObject {
 
 final class PlaySongSceneViewController: UIViewController {
     private var subscriptions =  Set<AnyCancellable>()
-    private var viewModel: PlaySongSceneViewModel?
+    private var viewModel: PlaySongSceneViewModel!
     
     func create(viewModel: PlaySongSceneViewModel) {
         self.viewModel = viewModel
@@ -25,19 +25,24 @@ final class PlaySongSceneViewController: UIViewController {
     private lazy var playInfoView: PlayInfoView = {
         let view = PlayInfoView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        viewModel?.songSubject
+        viewModel.songSubject
             .sink(receiveValue: {
-                view.fill(with: $0)
+                view.configure(with: $0)
             })
             .store(in: &subscriptions)
-        
         return view
     }()
     
     private lazy var playControlView: PlayControlView = {
         let view = PlayControlView()
         view.delegate = self
-        view.playerManger = viewModel?.playerManger
+        view.viewModel = viewModel
+        viewModel.songSubject
+            .sink(receiveValue: {
+                view.configure(with: $0)
+            })
+            .store(in: &subscriptions)
+        
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
@@ -45,6 +50,12 @@ final class PlaySongSceneViewController: UIViewController {
     
     private lazy var lyricsView: PlayLyricsView = {
         let view = PlayLyricsView()
+        view.viewModel = viewModel
+        viewModel.songSubject
+            .sink(receiveValue: {
+                view.configure(with: $0)
+            })
+            .store(in: &subscriptions)
         view.translatesAutoresizingMaskIntoConstraints = false
         
         let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(showDetailLyricsView))
@@ -66,7 +77,7 @@ final class PlaySongSceneViewController: UIViewController {
     func setupConstraints() {
         let safeArea = view.safeAreaLayoutGuide
         let viewFrame = view.bounds
-        
+        let padding = 20.0
         NSLayoutConstraint.activate([
             playInfoView.topAnchor.constraint(equalTo: safeArea.topAnchor),
             playInfoView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
@@ -84,7 +95,7 @@ final class PlaySongSceneViewController: UIViewController {
         ])
         
         NSLayoutConstraint.activate([
-            playControlView.topAnchor.constraint(equalTo: lyricsView.bottomAnchor),
+            playControlView.topAnchor.constraint(equalTo: lyricsView.bottomAnchor, constant: padding),
             playControlView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
             playControlView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             playControlView.widthAnchor.constraint(equalTo: safeArea.widthAnchor),
@@ -92,6 +103,7 @@ final class PlaySongSceneViewController: UIViewController {
         ])
     }
     
+    //TODO: FlowCoordinator로 흐름 이동 필요
     @objc func showDetailLyricsView() {
         let viewController = DetailLyricsTableViewController()
         viewController.playerManger = viewModel?.playerManger
@@ -115,8 +127,3 @@ extension PlaySongSceneViewController: PlayControlDelegate {
         
     }
 }
-
-//@available(iOS 17.0, *)
-//#Preview {
-//    PlaySongSceneViewController(viewModel: PlaySongSceneViewModel(fetchSongUseCase: FetchSongUseCase(songWebRepository: RealSongWebRepository(config: AppConfigurations()))))
-//}

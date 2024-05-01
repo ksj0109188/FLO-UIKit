@@ -19,6 +19,7 @@ extension WebRepository {
             
             return URLSession.shared
                 .dataTaskPublisher(for: request)
+                .receive(on: DispatchQueue.global())
                 .requestJSON(httpCodes: httpCodes)
         } catch let error {
             return Fail<Value, Error>(error: error).eraseToAnyPublisher()

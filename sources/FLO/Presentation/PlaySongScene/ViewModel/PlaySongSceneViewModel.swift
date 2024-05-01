@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import AVKit
 import Combine
 
 ///note: FlowCoordinator 정의한 화면 흐름을 실행
@@ -20,7 +21,8 @@ protocol PlaySongSceneViewModelInput {
 
 ///note: ViewModel에서 방출 할 수 있는 Output
 protocol PlaySongSceneViewModelOutput {
-    var songSubject : PassthroughSubject<Song, Never> { get set }
+    var songDTO: SongDTO? {get set}
+    var songSubject: PassthroughSubject<SongDTO, Never> { get set }
 }
 
 typealias PlaySongSceneViewModelInOutput = PlaySongSceneViewModelInput & PlaySongSceneViewModelOutput
@@ -28,9 +30,8 @@ typealias PlaySongSceneViewModelInOutput = PlaySongSceneViewModelInput & PlaySon
 final class PlaySongSceneViewModel: PlaySongSceneViewModelInOutput {
     let playerManger = PlayerManager()
     private let fetchSongUseCase: FetchSongUseCase
-    private var song: Song?
-    var songSubject = PassthroughSubject<Song, Never>()
-    
+    var songDTO: SongDTO?
+    var songSubject = PassthroughSubject<SongDTO, Never>()
     var subscription = Set<AnyCancellable>()
     
     init(fetchSongUseCase: FetchSongUseCase) {
@@ -48,14 +49,59 @@ final class PlaySongSceneViewModel: PlaySongSceneViewModelInOutput {
                         debugPrint(failure.localizedDescription)
                 }
             }, receiveValue: { [weak self] in
-                self?.song = $0
+                self?.songDTO = $0
                 self?.songSubject.send($0)
             })
             .store(in: &subscription)
     }
     
-//    func observe() -> AnyPublisher<Song, Never> {
-//        song.publisher.eraseToAnyPublisher()
-//    }
     
+    ///note:  메인화면 노래재생시 가사 싱크를 맞추기위한 메소드
+    /// - Parameter time:  CMTime
+    /// - Parameter InputTimeType:  milseconds로 변환 후 처리하기 위한 입력값으로 입력되는 CMTime값 기준 milSeconds, seconds 타입도 전달 필요
+    /// - Returns : [(String, HighlighType)] 튜플 형태의 배열로 String은 가사, HighlighType은 현재 진행중인 가사를 표시하기 위한 용도
+    func syncLyrics(time: CMTime, inputTimeType: TimeType) -> [(String, HighlighType)] {
+        let milliseconds: Int
+        var lyrics: [(String, HighlighType)] = []
+        
+        switch inputTimeType {
+            case .milSeconds:
+                milliseconds = Int(CMTimeGetSeconds(time))
+            case .seconds:
+                milliseconds = Int(CMTimeGetSeconds(time) * 1000)
+        }
+        
+        if let songDTO = songDTO {
+            let transformedLyrics = songDTO.transformedLyrics
+            let timeLine = songDTO.timeLineLyrics
+            let target = timeLine.filter { $0 <= milliseconds}.max() ?? 0
+            let targetIndex = timeLine.firstIndex(of: target)
+            // 노래 시작전
+            if targetIndex == nil {
+                lyrics.append((transformedLyrics[timeLine[0]] ?? "", .nonHighLight))
+                lyrics.append((transformedLyrics[timeLine[1]] ?? "", .nonHighLight))
+            // 노래 시작
+            } else if let targetIndex = targetIndex, targetIndex + 1 <= timeLine.count - 1{
+                lyrics.append((transformedLyrics[timeLine[targetIndex]] ?? "", .HighLight ))
+                lyrics.append((transformedLyrics[timeLine[targetIndex + 1]] ?? "", .nonHighLight ))
+            }
+            // 노래 마지막 부분
+            else if let targetIndex = targetIndex, targetIndex == timeLine.count - 1 {
+                lyrics.append((transformedLyrics[timeLine[targetIndex - 1]] ?? "", .nonHighLight ))
+                lyrics.append((transformedLyrics[timeLine[targetIndex]] ?? "", .HighLight ))
+            }
+        }
+        
+        return lyrics
+    }
+    
+    enum TimeType {
+        case milSeconds
+        case seconds
+    }
+    
+    enum HighlighType {
+        case HighLight
+        case nonHighLight
+    }
 }

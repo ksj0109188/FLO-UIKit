@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 protocol SongWebRepository: WebRepository {
-    func loadSong() -> AnyPublisher<Song, Error>
+    func loadSong() -> AnyPublisher<SongDTO, Error>
 }
 
 struct RealSongWebRepository: SongWebRepository {
@@ -19,7 +19,7 @@ struct RealSongWebRepository: SongWebRepository {
         self.baseURL = config.apiBaseURL
     }
     
-    func loadSong() -> AnyPublisher<Song, any Error> {
+    func loadSong() -> AnyPublisher<SongDTO, any Error> {
         return call()
     }
 }

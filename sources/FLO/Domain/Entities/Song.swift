@@ -9,7 +9,7 @@ import Foundation
 import AVKit
 import AVFoundation
 
-struct Song: Decodable {
+struct Song {
     let singer: String
     let album: String
     let title: String
@@ -17,35 +17,6 @@ struct Song: Decodable {
     let image: String
     let file: String
     let lyrics: String
-}
-
-extension Song {
-    var transformedLyrics: [Int:String] {
-        var lyricsDict = [Int: String]()
-        let lines = lyrics.components(separatedBy: "\n")
-        for line in lines {
-            let components = line.components(separatedBy: "]")
-            if components.count > 1,
-               let timeString = components.first?.trimmingCharacters(in: CharacterSet(charactersIn: "[")),
-               let lyrics = components.last {
-                if let milliseconds = Song.convertTimeToMilliseconds(timeString) {
-                    lyricsDict[milliseconds] = lyrics
-                }
-            }
-        }
-        return lyricsDict
-    }
-    
-    static func convertTimeToMilliseconds(_ timeString: String) -> Int? {
-        let timeComponents = timeString.components(separatedBy: ":")
-        if timeComponents.count == 3 {
-            let minutes = Int(timeComponents[0]) ?? 0
-            let seconds = Int(timeComponents[1]) ?? 0
-            let milliseconds = Int(timeComponents[2]) ?? 0
-            return minutes * 60000 + seconds * 1000 + milliseconds
-        }
-        return nil
-    }
 }
 
 extension Song {
