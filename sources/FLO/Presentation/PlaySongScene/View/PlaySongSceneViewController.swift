@@ -116,14 +116,12 @@ final class PlaySongSceneViewController: UIViewController {
 
 extension PlaySongSceneViewController: PlayControlDelegate {
     func togglePlayPause() {
-        if let player = viewModel?.playerManger.player {
-            player.rate == 0 ? player.play() : player.pause()
-        }
+        viewModel.playerManger.pausePlayer()
     }
     
     func sliderValueChanged(to value: Float) {
         let targetTime = CMTimeMake(value: Int64(value), timescale: 1)
-        viewModel?.playerManger.player.seek(to: targetTime)
-        
+        viewModel.playerManger.moveToTimeLine(to: targetTime)
     }
+    
 }

@@ -9,7 +9,7 @@ import Foundation
 import AVKit
 
 class PlayerManager {
-    var player: AVPlayer!
+    private var player: AVPlayer!
     private var timeObserverToken: Any?
     
     init() {
@@ -37,6 +37,14 @@ class PlayerManager {
                               preferredTimescale: CMTimeScale(NSEC_PER_SEC))
         
         timeObserverToken = player.addPeriodicTimeObserver(forInterval: interval, queue: .main,using: update)
+    }
+    
+    func pausePlayer() {
+        player.rate == 0 ? player.play() : player.pause()
+    }
+    
+    func moveToTimeLine(to time: CMTime) {
+        player.seek(to: time)
     }
     
 }
