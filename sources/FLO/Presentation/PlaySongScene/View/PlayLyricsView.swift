@@ -11,7 +11,7 @@ import AVKit
 class PlayLyricsView: UIView {
     var viewModel: PlaySongSceneViewModel! {
         didSet {
-            viewModel.playerManger.observer { [weak self] time in
+            viewModel.playerManager.observer { [weak self] time in
                 self?.updateUI(time: time)
             }
         }
@@ -20,6 +20,7 @@ class PlayLyricsView: UIView {
     private lazy var firstLyricsLabel: UILabel = {
         let label = UILabel()
         label.text = " "
+        label.textColor = .white
         label.numberOfLines = 1
         label.layer.borderColor = CGColor.init(red: 10.0, green: 10.0, blue: 10.0, alpha: 0.0)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -30,6 +31,7 @@ class PlayLyricsView: UIView {
     private lazy var secondLyricsLabel: UILabel = {
         let label = UILabel()
         label.text = " "
+        label.textColor = .white
         label.numberOfLines = 1
         label.layer.borderColor = CGColor.init(red: 10.0, green: 10.0, blue: 10.0, alpha: 0.0)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -100,23 +102,6 @@ class PlayLyricsView: UIView {
             firstLyricsLabel.text = lyrics[0].0
             secondLyricsLabel.text = lyrics[1].0
         }
-        
-        
-        
-//        var keys = Array(Lyrics.keys)
-//        
-//        keys.sort { $0 < $1}
-//        
-//        if keys.count > 0 {
-//            let target = keys.filter { $0 <= milliseconds}.max() ?? 0
-//            let targetIndex = keys.firstIndex(of: target)
-//            
-//            if targetIndex == nil {
-//                lyricsLabel.text = "\(Lyrics[keys[0]] ?? "")\n \(Lyrics[keys[1]] ?? "")"
-//            } else if let index = targetIndex, index + 1 < keys.count - 1 {
-//                lyricsLabel.text = "\(Lyrics[keys[index]] ?? "")\n \(Lyrics[keys[index + 1]] ?? "")"
-//            }
-//        }
     }
     
 }

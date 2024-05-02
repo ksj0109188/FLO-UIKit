@@ -12,7 +12,7 @@ class PlayControlView: UIView {
     weak var delegate: PlayControlDelegate?
     var viewModel: PlaySongSceneViewModel! {
         didSet {
-            viewModel.playerManger.observer { [weak self] time in
+            viewModel.playerManager.observer { [weak self] time in
                 self?.updateUI(time: time)
             }
         }

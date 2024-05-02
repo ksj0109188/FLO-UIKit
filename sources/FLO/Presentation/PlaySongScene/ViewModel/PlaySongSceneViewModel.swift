@@ -10,13 +10,13 @@ import AVKit
 import Combine
 
 ///note: FlowCoordinator 정의한 화면 흐름을 실행
-//struct Actions {
-//    func makeDetailLyricsTableViewController()
-//}
+struct PlaySongSceneViewModelActions {
+    let showDetailLyrics: (SongDTO, PlayerManager) -> Void
+}
 
 ///note: ViewController에서 ViewModel한테 입력 이벤트 전달
 protocol PlaySongSceneViewModelInput {
-    
+    func showDetailLyrics() -> Void
 }
 
 ///note: ViewModel에서 방출 할 수 있는 Output
@@ -27,15 +27,19 @@ protocol PlaySongSceneViewModelOutput {
 
 typealias PlaySongSceneViewModelInOutput = PlaySongSceneViewModelInput & PlaySongSceneViewModelOutput
 
-final class PlaySongSceneViewModel: PlaySongSceneViewModelInOutput {
-    let playerManger = PlayerManager()
+final class PlaySongSceneViewModel: PlaySongSceneViewModelInOutput {    
     private let fetchSongUseCase: FetchSongUseCase
+    private let actions: PlaySongSceneViewModelActions
+    
+    var playerManager: PlayerManager
     var songDTO: SongDTO?
     var songSubject = PassthroughSubject<SongDTO, Never>()
     var subscription = Set<AnyCancellable>()
     
-    init(fetchSongUseCase: FetchSongUseCase) {
+    init(fetchSongUseCase: FetchSongUseCase, playerManager: PlayerManager, actions: PlaySongSceneViewModelActions) {
         self.fetchSongUseCase = fetchSongUseCase
+        self.playerManager = playerManager
+        self.actions = actions
         loadData()
     }
     
@@ -70,7 +74,7 @@ final class PlaySongSceneViewModel: PlaySongSceneViewModelInOutput {
             case .seconds:
                 milliseconds = Int(CMTimeGetSeconds(time) * 1000)
         }
-        
+
         if let songDTO = songDTO {
             let transformedLyrics = songDTO.transformedLyrics
             let timeLine = songDTO.timeLineLyrics
@@ -95,13 +99,11 @@ final class PlaySongSceneViewModel: PlaySongSceneViewModelInOutput {
         return lyrics
     }
     
-    enum TimeType {
-        case milSeconds
-        case seconds
+    func showDetailLyrics() {
+        if let songDTO = self.songDTO {
+            actions.showDetailLyrics(songDTO, playerManager)
+        }
     }
     
-    enum HighlighType {
-        case HighLight
-        case nonHighLight
-    }
+    
 }

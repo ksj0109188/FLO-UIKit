@@ -22,6 +22,7 @@ final class PlaySongSceneViewController: UIViewController {
         self.viewModel = viewModel
     }
     
+    //TODO: private viewModel create함수 처럼 내부 함수로 설정하도록 변경하기
     private lazy var playInfoView: PlayInfoView = {
         let view = PlayInfoView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -33,6 +34,7 @@ final class PlaySongSceneViewController: UIViewController {
         return view
     }()
     
+    //TODO: private viewModel create함수 처럼 내부 함수로 설정하도록 변경하기
     private lazy var playControlView: PlayControlView = {
         let view = PlayControlView()
         view.delegate = self
@@ -48,6 +50,7 @@ final class PlaySongSceneViewController: UIViewController {
         return view
     }()
     
+    //TODO: private viewModel create함수 처럼 내부 함수로 설정하도록 변경하기
     private lazy var lyricsView: PlayLyricsView = {
         let view = PlayLyricsView()
         view.viewModel = viewModel
@@ -105,23 +108,19 @@ final class PlaySongSceneViewController: UIViewController {
     
     //TODO: FlowCoordinator로 흐름 이동 필요
     @objc func showDetailLyricsView() {
-        let viewController = DetailLyricsTableViewController()
-        viewController.playerManger = viewModel?.playerManger
-        viewController.modalPresentationStyle = .overFullScreen
-        
-        present(viewController, animated: false)
+        viewModel.showDetailLyrics()
     }
     
 }
 
 extension PlaySongSceneViewController: PlayControlDelegate {
     func togglePlayPause() {
-        viewModel.playerManger.pausePlayer()
+        viewModel.playerManager.pausePlayer()
     }
     
     func sliderValueChanged(to value: Float) {
         let targetTime = CMTimeMake(value: Int64(value), timescale: 1)
-        viewModel.playerManger.moveToTimeLine(to: targetTime)
+        viewModel.playerManager.moveToTimeLine(to: targetTime)
     }
     
 }

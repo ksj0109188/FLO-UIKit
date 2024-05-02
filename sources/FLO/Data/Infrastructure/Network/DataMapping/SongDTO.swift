@@ -7,6 +7,7 @@
 
 import Foundation
 
+//TODO: song 프로퍼티들 Song객체로 캡슐화 필요
 struct SongDTO: Codable {
     let singer: String
     let album: String
