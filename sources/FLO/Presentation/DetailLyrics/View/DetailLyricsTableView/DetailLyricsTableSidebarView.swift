@@ -1,0 +1,100 @@
+//
+//  DetailLyricsSceneSidebarView.swift
+//  FLO
+//
+//  Created by 김성준 on 5/3/24.
+//
+
+import UIKit
+
+class DetailLyricsTableSidebarView: UIView {
+    weak var delegate: DetailLyricsTableViewDelegate?
+    
+    private var isToggled: Bool = false {
+        didSet {
+            updateButtonAppearance()
+        }
+    }
+    
+    private lazy var toggleOnImage: UIImage = {
+        let image = UIImage(systemName: "music.note.list")!
+        image.withTintColor(.purple)
+        
+        return image
+    }()
+    
+    private lazy var toggleOffImage: UIImage = {
+        let image = UIImage(systemName: "circle.fill")!
+        image.withTintColor(.gray)
+        
+        return image
+    }()
+    
+    private lazy var sideStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return stackView
+    }()
+    
+    private lazy var toggleButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(toggleOffImage, for: .normal)
+        button.addTarget(self, action: #selector(toggleButtonTapped), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    private lazy var fillerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        return view
+    }()
+    
+    private func updateButtonAppearance() {
+        let image = isToggled ? toggleOnImage : toggleOffImage
+        toggleButton.setImage(image, for: .normal)
+    }
+    
+    private override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupViews()
+        setupConstraints()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupViews() {
+        sideStackView.addArrangedSubview(toggleButton)
+        sideStackView.addArrangedSubview(fillerView)
+        addSubviews(sideStackView)
+    }
+    
+    private func setupConstraints() {
+        NSLayoutConstraint.activate([
+            sideStackView.topAnchor.constraint(equalTo: topAnchor),
+            sideStackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            sideStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            sideStackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            sideStackView.widthAnchor.constraint(equalTo: widthAnchor),
+            sideStackView.heightAnchor.constraint(equalTo: heightAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            toggleButton.widthAnchor.constraint(equalToConstant: 200),
+            toggleButton.heightAnchor.constraint(equalToConstant: 100)
+        ])
+    }
+    
+    @objc private func toggleButtonTapped() {
+        isToggled.toggle()
+        delegate?.isLyricsSelect(isLyricsSelect: isToggled)
+    }
+}

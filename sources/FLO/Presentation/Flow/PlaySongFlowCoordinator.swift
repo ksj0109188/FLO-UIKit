@@ -9,7 +9,7 @@ import UIKit
 
 ///note: PlaySongSceneDIContainer에서 PlaySongFlowCoordinator에 정의한 화면 전환시 의존성 주입 메소드 리스트
 protocol PlaySongFlowCoordinatorDependencies {
-    func makeDetailLyricsTableViewController(songDTO: SongDTO, playerManager: PlayerManager) -> DetailLyricsTableViewController
+    func makeDetailLyricsSceneViewController(songDTO: SongDTO, playerManager: PlayerManager, actions: DetailLyricsViewModelActions) -> DetailLyricsSceneViewController
     func makePlaySongSceneViewController(actions: PlaySongSceneViewModelActions) -> PlaySongSceneViewController
 }
 
@@ -17,8 +17,7 @@ protocol PlaySongFlowCoordinatorDependencies {
 final class PlaySongFlowCoordinator {
     private weak var navigationController: UINavigationController?
     private let dependencies: PlaySongFlowCoordinatorDependencies
-    
-    private weak var playSongSceneViewController: PlaySongSceneViewController?
+    private weak var detailLyricsSceneViewController: DetailLyricsSceneViewController?
     
     init(navigationController: UINavigationController, dependencies: PlaySongFlowCoordinatorDependencies) {
         self.navigationController = navigationController
@@ -29,16 +28,18 @@ final class PlaySongFlowCoordinator {
         let actions = PlaySongSceneViewModelActions(showDetailLyrics: showDetailLyrics)
         let vc = dependencies.makePlaySongSceneViewController(actions: actions)
         navigationController?.pushViewController(vc, animated: false)
-        
-        playSongSceneViewController = vc
     }
     
     private func showDetailLyrics(songDTO: SongDTO, playerManager: PlayerManager) {
-        let vc = dependencies.makeDetailLyricsTableViewController(songDTO: songDTO, playerManager: playerManager)
+        let actions = DetailLyricsViewModelActions(dismissDetailLyricsView: dismissDetailLyricsView)
+        let vc = dependencies.makeDetailLyricsSceneViewController(songDTO: songDTO, playerManager: playerManager, actions: actions)
+        detailLyricsSceneViewController = vc
         
-        navigationController?.modalPresentationStyle = .overFullScreen
-        navigationController?.present(vc, animated: true)
+        navigationController?.pushViewController(vc, animated: false)
     }
     
+    private func dismissDetailLyricsView() {
+        navigationController?.popToRootViewController(animated: false)
+    }
     
 }

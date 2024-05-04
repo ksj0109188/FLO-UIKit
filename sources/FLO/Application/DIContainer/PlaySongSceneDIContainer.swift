@@ -31,8 +31,8 @@ final class PlaySongSceneDIContainer: PlaySongFlowCoordinatorDependencies {
         return PlaySongSceneViewModel(fetchSongUseCase: makeFetchSongUseCase(), playerManager: PlayerManager(), actions: actions)
     }
     
-    func makeDetailLyricsTableViewModel(songDTO: SongDTO, playerManager: PlayerManager) -> DetailLyricsViewModel {
-        return DetailLyricsViewModel(songDTO: songDTO, playerManger: playerManager)
+    func makeDetailLyricsTableViewModel(songDTO: SongDTO, playerManager: PlayerManager, actions: DetailLyricsViewModelActions) -> DetailLyricsViewModel {
+        return DetailLyricsViewModel(songDTO: songDTO, playerManger: playerManager, actions: actions)
     }
     
     // MARK: Presentation
@@ -43,9 +43,9 @@ final class PlaySongSceneDIContainer: PlaySongFlowCoordinatorDependencies {
         return vc
     }
     
-    func makeDetailLyricsTableViewController(songDTO: SongDTO, playerManager: PlayerManager) -> DetailLyricsTableViewController {
-        let vc = DetailLyricsTableViewController()
-        vc.create(viewModel: makeDetailLyricsTableViewModel(songDTO: songDTO, playerManager: playerManager))
+    func makeDetailLyricsSceneViewController(songDTO: SongDTO, playerManager: PlayerManager, actions: DetailLyricsViewModelActions) -> DetailLyricsSceneViewController {
+        let vc = DetailLyricsSceneViewController()
+        vc.create(viewModel: makeDetailLyricsTableViewModel(songDTO: songDTO, playerManager: playerManager, actions: actions))
         
         return vc
     }

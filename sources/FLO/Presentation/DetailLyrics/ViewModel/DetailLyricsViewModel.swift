@@ -8,26 +8,35 @@
 import Foundation
 import AVKit
 
+///note: FlowCoordinator 정의한 화면 흐름을 실행
+struct DetailLyricsViewModelActions {
+    let dismissDetailLyricsView: () -> Void
+}
+
 ///note: ViewController에서 ViewModel한테 입력 이벤트 전달
 protocol DetailLyricsViewModelInput {
-    
+//    var isLyricsSelect: Bool {get set}
+    func dismissDetailLyricsView()
 }
 
 ///note: ViewModel에서 방출 할 수 있는 Output
 protocol DetailLyricsViewModelOutput {
     var songDTO: SongDTO {get}
-    var playerManger: PlayerManager {get}
+    var playerManager: PlayerManager {get}
 }
 
 typealias DetailLyricsViewModelInOutput = DetailLyricsViewModelInput & DetailLyricsViewModelOutput
 
-final class DetailLyricsViewModel: DetailLyricsViewModelInOutput {
+final class DetailLyricsViewModel: DetailLyricsViewModelInOutput, PlayableViewModel {
+//    var isLyricsSelect: Bool = false
     var songDTO: SongDTO
-    var playerManger: PlayerManager
+    var playerManager: PlayerManager
+    let actions: DetailLyricsViewModelActions
     
-    init(songDTO: SongDTO, playerManger: PlayerManager) {
+    init(songDTO: SongDTO, playerManger: PlayerManager, actions: DetailLyricsViewModelActions) {
         self.songDTO = songDTO
-        self.playerManger = playerManger
+        self.playerManager = playerManger
+        self.actions = actions
     }
     
     func getCurrentLyricsIndex(time: CMTime, inputTimeType: TimeType) -> Int {
@@ -45,7 +54,10 @@ final class DetailLyricsViewModel: DetailLyricsViewModelInOutput {
         let targetIndex = timeLine.firstIndex(of: target)
         
         return targetIndex ?? 0
-        
+    }
+    
+    func dismissDetailLyricsView() {
+        actions.dismissDetailLyricsView()
     }
     
     

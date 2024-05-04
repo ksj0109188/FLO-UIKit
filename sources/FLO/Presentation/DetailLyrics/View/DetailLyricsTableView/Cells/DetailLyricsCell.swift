@@ -9,10 +9,12 @@ import UIKit
 
 class DetailLyricsCell: UITableViewCell {
     static let reuseIdentifier = String(describing: DetailLyricsCell.self)
-
+    
+    private lazy var width: Double = 0.0
     private lazy var lyricsLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 2
         
         return label
     }()
@@ -24,8 +26,8 @@ class DetailLyricsCell: UITableViewCell {
         setupConstraints()
     }
     
-    
-    func configure(lyrics: String) {
+    func configure(lyrics: String, width: Double) {
+        self.width = width
         lyricsLabel.text = lyrics
     }
     
@@ -39,21 +41,19 @@ class DetailLyricsCell: UITableViewCell {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            lyricsLabel.topAnchor.constraint(equalTo: contentView.topAnchor),
-            lyricsLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            lyricsLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            lyricsLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+            lyricsLabel.topAnchor.constraint(equalTo: topAnchor),
+            lyricsLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
+            lyricsLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
+            lyricsLabel.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
     }
     
     func highlight() {
         self.lyricsLabel.font = UIFont.boldSystemFont(ofSize: 16)
-        self.contentView.backgroundColor = UIColor.yellow
     }
     
     func unHighlihg() {
         self.lyricsLabel.font = UIFont.systemFont(ofSize: 16)
-        self.contentView.backgroundColor = .none
     }
 
 }
