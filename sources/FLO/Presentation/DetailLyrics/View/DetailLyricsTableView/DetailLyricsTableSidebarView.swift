@@ -72,8 +72,8 @@ class DetailLyricsTableSidebarView: UIView {
     }
     
     private func setupViews() {
-        sideStackView.addArrangedSubview(toggleButton)
         sideStackView.addArrangedSubview(fillerView)
+        sideStackView.addArrangedSubview(toggleButton)
         addSubviews(sideStackView)
     }
     

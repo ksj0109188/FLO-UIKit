@@ -11,9 +11,9 @@ import Combine
 class PlayInfoView: UIView {
     private lazy var subscriptions = Set<AnyCancellable>()
     
-    private lazy var albumName: UILabel = {
+    lazy var albumName: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        label.font = .subTitleBoldFont
         label.textColor = .white
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -23,8 +23,9 @@ class PlayInfoView: UIView {
     
     private lazy var albumCover: UIImageView = {
         let image = UIImageView(image: UIImage(systemName: "photo.circle.fill"))
-        image.contentMode = .scaleAspectFit
-        image.layer.cornerRadius = 22
+        image.layer.cornerRadius = 25
+        image.layer.borderWidth = 3
+        image.contentMode = .scaleToFill
         image.translatesAutoresizingMaskIntoConstraints = false
         
         return image
@@ -32,7 +33,7 @@ class PlayInfoView: UIView {
     
     private lazy var title: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        label.font = .titleBoldFont
         label.textAlignment = .center
         label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -42,7 +43,8 @@ class PlayInfoView: UIView {
     
     private lazy var signerName: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        label.font = .subTitleBoldFont
+        label.textColor = .white
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -62,6 +64,7 @@ class PlayInfoView: UIView {
     private override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
+        setupConstraints()
     }
     
     required init?(coder: NSCoder) {
@@ -78,7 +81,6 @@ class PlayInfoView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        setupConstraints()
     }
     
     func configure(with song: SongDTO){
@@ -102,22 +104,21 @@ class PlayInfoView: UIView {
             .store(in: &subscriptions)
     }
     
+    
     func setupConstraints() {
-        let padding: CGFloat = 16
-        let viewFrame = bounds
-        
         NSLayoutConstraint.activate([
-            topInfoView.topAnchor.constraint(equalTo: topAnchor, constant: 20.0),
-            topInfoView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20.0),
-            topInfoView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20.0),
-//            topInfoView.heightAnchor.constraint(equalToConstant: viewFrame.height/3)
+            topInfoView.topAnchor.constraint(equalTo: topAnchor),
+            topInfoView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            topInfoView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            topInfoView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.3)
         ])
 
         NSLayoutConstraint.activate([
-            albumCover.topAnchor.constraint(equalTo: topInfoView.bottomAnchor, constant: padding),
-            albumCover.widthAnchor.constraint(equalToConstant: viewFrame.width  / 1.5),
-            albumCover.heightAnchor.constraint(equalTo: widthAnchor),
-            albumCover.centerXAnchor.constraint(equalTo: centerXAnchor)
+            albumCover.topAnchor.constraint(equalTo: topInfoView.bottomAnchor),
+            albumCover.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 100),
+            albumCover.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -100),
+            albumCover.bottomAnchor.constraint(equalTo: bottomAnchor),
+            
         ])
     }
     

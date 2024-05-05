@@ -22,10 +22,13 @@ final class PlaySongSceneViewController: UIViewController {
         let view = PlayInfoView()
         view.translatesAutoresizingMaskIntoConstraints = false
         viewModel.songSubject
+            
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: {
                 view.configure(with: $0)
             })
             .store(in: &subscriptions)
+        
         return view
     }()
     
@@ -76,24 +79,24 @@ final class PlaySongSceneViewController: UIViewController {
         let safeArea = view.safeAreaLayoutGuide
         let viewFrame = view.bounds
         let padding = 20.0
+        
         NSLayoutConstraint.activate([
-            playInfoView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            playInfoView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: padding),
             playInfoView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             playInfoView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            playInfoView.widthAnchor.constraint(equalToConstant: viewFrame.width),
             playInfoView.heightAnchor.constraint(equalToConstant: viewFrame.height / 1.5)
         ])
         
         NSLayoutConstraint.activate([
-            lyricsView.topAnchor.constraint(equalTo: playInfoView.bottomAnchor),
-            lyricsView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-            lyricsView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            lyricsView.widthAnchor.constraint(equalTo: safeArea.widthAnchor),
-            lyricsView.heightAnchor.constraint(equalToConstant: viewFrame.height / 2)
+            lyricsView.topAnchor.constraint(equalTo: playInfoView.bottomAnchor, constant: padding),
+            lyricsView.leadingAnchor.constraint(equalTo: playInfoView.leadingAnchor),
+            lyricsView.trailingAnchor.constraint(equalTo: playInfoView.trailingAnchor),
+            lyricsView.heightAnchor.constraint(equalToConstant: viewFrame.height / 1.5),
+            lyricsView.bottomAnchor.constraint(equalTo: playControlView.topAnchor),
         ])
         
         NSLayoutConstraint.activate([
-            playControlView.topAnchor.constraint(equalTo: lyricsView.bottomAnchor, constant: padding),
+            playControlView.topAnchor.constraint(equalTo: lyricsView.bottomAnchor),
             playControlView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
             playControlView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             playControlView.widthAnchor.constraint(equalTo: safeArea.widthAnchor),

@@ -19,10 +19,11 @@ final class PlayLyricsView: UIView {
     
     private lazy var firstLyricsLabel: UILabel = {
         let label = UILabel()
-        label.text = " "
-        label.textColor = .white
+        label.textAlignment = .center
         label.numberOfLines = 1
-        label.layer.borderColor = CGColor.init(red: 10.0, green: 10.0, blue: 10.0, alpha: 0.0)
+        label.textColor = .gray
+        label.font = .contentFont
+     
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -30,10 +31,10 @@ final class PlayLyricsView: UIView {
     
     private lazy var secondLyricsLabel: UILabel = {
         let label = UILabel()
-        label.text = " "
-        label.textColor = .white
+        label.textAlignment = .center
         label.numberOfLines = 1
-        label.layer.borderColor = CGColor.init(red: 10.0, green: 10.0, blue: 10.0, alpha: 0.0)
+        label.textColor = .gray
+        label.font = .contentFont
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -42,20 +43,15 @@ final class PlayLyricsView: UIView {
     private override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
+        setupConstraints()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    //TODO: Private 전체적으로 추가 필요
     private func setupViews() {
         addSubviews(firstLyricsLabel, secondLyricsLabel)
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        setupConstraints()
     }
 
     
@@ -64,16 +60,13 @@ final class PlayLyricsView: UIView {
             firstLyricsLabel.topAnchor.constraint(equalTo: topAnchor),
             firstLyricsLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
             firstLyricsLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            firstLyricsLabel.widthAnchor.constraint(equalTo: widthAnchor),
-            firstLyricsLabel.heightAnchor.constraint(equalTo: heightAnchor),
         ])
         
         NSLayoutConstraint.activate([
             secondLyricsLabel.topAnchor.constraint(equalTo: firstLyricsLabel.bottomAnchor),
-            secondLyricsLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            secondLyricsLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            secondLyricsLabel.widthAnchor.constraint(equalTo: widthAnchor),
-            secondLyricsLabel.heightAnchor.constraint(equalTo: heightAnchor)
+            secondLyricsLabel.leadingAnchor.constraint(equalTo: firstLyricsLabel.leadingAnchor),
+            secondLyricsLabel.trailingAnchor.constraint(equalTo: firstLyricsLabel.trailingAnchor),
+            secondLyricsLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
     }
     
@@ -93,14 +86,20 @@ final class PlayLyricsView: UIView {
         //TODO: Font상수화나 extension으로 별도 파일로 관리하기
         if lyrics.count == 2 {
             if lyrics[0].1 == .HighLight {
-                firstLyricsLabel.font = .boldSystemFont(ofSize: 16)
-                secondLyricsLabel.font = .systemFont(ofSize: 16)
+                firstLyricsLabel.font =  .contentBoldFont
+                secondLyricsLabel.font = .contentFont
+                firstLyricsLabel.textColor = .white
+                secondLyricsLabel.textColor = .gray
             } else if lyrics[1].1 == .HighLight {
-                firstLyricsLabel.font = .systemFont(ofSize: 16)
-                secondLyricsLabel.font = .boldSystemFont(ofSize: 16)
+                firstLyricsLabel.font = .contentFont
+                secondLyricsLabel.font = .contentBoldFont
+                firstLyricsLabel.textColor = .gray
+                secondLyricsLabel.textColor = .white
             } else {
-                firstLyricsLabel.font = .systemFont(ofSize: 16)
-                secondLyricsLabel.font = .systemFont(ofSize: 16)
+                firstLyricsLabel.font = .contentFont
+                secondLyricsLabel.font = .contentFont
+                firstLyricsLabel.textColor = .gray
+                secondLyricsLabel.textColor = .gray
             }
             
             firstLyricsLabel.text = lyrics[0].0
