@@ -9,11 +9,6 @@ import UIKit
 import AVKit
 import Combine
 
-protocol PlayControlDelegate: AnyObject {
-    func togglePlayPause()
-    func sliderValueChanged(to value: Float)
-}
-
 final class PlaySongSceneViewController: UIViewController {
     private var subscriptions =  Set<AnyCancellable>()
     private var viewModel: PlaySongSceneViewModel!
@@ -38,10 +33,12 @@ final class PlaySongSceneViewController: UIViewController {
     private lazy var playControlView: PlayControlView = {
         let view = PlayControlView()
         view.delegate = self
-        view.viewModel = viewModel
         viewModel.songSubject
             .sink(receiveValue: {
                 view.configure(with: $0)
+                self.viewModel.playerManager.observer { time in
+                    view.updateUI(time: time)
+                }
             })
             .store(in: &subscriptions)
         
@@ -50,13 +47,11 @@ final class PlaySongSceneViewController: UIViewController {
         return view
     }()
     
-    //TODO: private viewModel create함수 처럼 내부 함수로 설정하도록 변경하기
     private lazy var lyricsView: PlayLyricsView = {
         let view = PlayLyricsView()
-        view.viewModel = viewModel
         viewModel.songSubject
             .sink(receiveValue: {
-                view.configure(with: $0)
+                view.configure(with: $0, viewModel: self.viewModel)
             })
             .store(in: &subscriptions)
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -86,7 +81,7 @@ final class PlaySongSceneViewController: UIViewController {
             playInfoView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             playInfoView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             playInfoView.widthAnchor.constraint(equalToConstant: viewFrame.width),
-            playInfoView.heightAnchor.constraint(equalToConstant: viewFrame.height / 2)
+            playInfoView.heightAnchor.constraint(equalToConstant: viewFrame.height / 1.5)
         ])
         
         NSLayoutConstraint.activate([
@@ -106,7 +101,6 @@ final class PlaySongSceneViewController: UIViewController {
         ])
     }
     
-    //TODO: FlowCoordinator로 흐름 이동 필요
     @objc func showDetailLyricsView() {
         viewModel.showDetailLyrics()
     }

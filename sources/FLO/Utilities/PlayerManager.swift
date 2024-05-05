@@ -5,23 +5,21 @@
 //  Created by 김성준 on 4/18/24.
 //
 
-import Foundation
 import AVKit
 
-class PlayerManager {
+protocol PlayableViewModel {
+    var playerManager: PlayerManager {get}
+}
+
+final class PlayerManager {
     private var player: AVPlayer!
     private var timeObserverToken: Any?
-    
-    init() {
-        setupPlayer()
-    }
     
     deinit {
         removeObserver()
     }
     
-    private func setupPlayer() {
-        let url = URL(string: "https://grepp-programmers-challenges.s3.ap-northeast-2.amazonaws.com/2020-flo/music.mp3")!
+    func configure(url: URL) {
         player = AVPlayer(url: url)
     }
     
@@ -48,5 +46,3 @@ class PlayerManager {
     }
     
 }
-
-

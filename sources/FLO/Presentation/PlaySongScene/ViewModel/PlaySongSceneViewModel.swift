@@ -27,7 +27,8 @@ protocol PlaySongSceneViewModelOutput {
 
 typealias PlaySongSceneViewModelInOutput = PlaySongSceneViewModelInput & PlaySongSceneViewModelOutput
 
-final class PlaySongSceneViewModel: PlaySongSceneViewModelInOutput {    
+final class PlaySongSceneViewModel: PlaySongSceneViewModelInOutput, PlayableViewModel {
+    
     private let fetchSongUseCase: FetchSongUseCase
     private let actions: PlaySongSceneViewModelActions
     
@@ -53,12 +54,18 @@ final class PlaySongSceneViewModel: PlaySongSceneViewModelInOutput {
                         debugPrint(failure.localizedDescription)
                 }
             }, receiveValue: { [weak self] in
+                if let fileURL = URL(string: $0.file) {
+                    self?.setPlayerURL(url: fileURL)
+                }
                 self?.songDTO = $0
                 self?.songSubject.send($0)
             })
             .store(in: &subscription)
     }
     
+    func setPlayerURL(url: URL) {
+        self.playerManager.configure(url: url)
+    }
     
     ///note:  메인화면 노래재생시 가사 싱크를 맞추기위한 메소드
     /// - Parameter time:  CMTime

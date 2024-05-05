@@ -28,10 +28,10 @@ protocol DetailLyricsViewModelOutput {
 typealias DetailLyricsViewModelInOutput = DetailLyricsViewModelInput & DetailLyricsViewModelOutput
 
 final class DetailLyricsViewModel: DetailLyricsViewModelInOutput, PlayableViewModel {
-//    var isLyricsSelect: Bool = false
+    
     var songDTO: SongDTO
     var playerManager: PlayerManager
-    let actions: DetailLyricsViewModelActions
+    private let actions: DetailLyricsViewModelActions
     
     init(songDTO: SongDTO, playerManger: PlayerManager, actions: DetailLyricsViewModelActions) {
         self.songDTO = songDTO

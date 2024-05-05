@@ -6,12 +6,15 @@
 //
 
 import UIKit
+import Combine
 
 class PlayInfoView: UIView {
+    private lazy var subscriptions = Set<AnyCancellable>()
     
     private lazy var albumName: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        label.textColor = .white
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         
@@ -21,7 +24,7 @@ class PlayInfoView: UIView {
     private lazy var albumCover: UIImageView = {
         let image = UIImageView(image: UIImage(systemName: "photo.circle.fill"))
         image.contentMode = .scaleAspectFit
-        image.layer.cornerRadius = 8
+        image.layer.cornerRadius = 22
         image.translatesAutoresizingMaskIntoConstraints = false
         
         return image
@@ -31,6 +34,7 @@ class PlayInfoView: UIView {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
         label.textAlignment = .center
+        label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -57,7 +61,6 @@ class PlayInfoView: UIView {
     
     private override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .blue
         setupViews()
     }
     
@@ -82,6 +85,21 @@ class PlayInfoView: UIView {
         albumName.text = song.album
         title.text = song.title
         signerName.text = song.singer
+        
+        if let url = URL(string: song.image) {
+            fetchURLImage(url: url)
+        }
+    }
+
+    private func fetchURLImage(url: URL) {
+        URLSession.shared.dataTaskPublisher(for: url)
+            .map { UIImage(data: $0.data) }
+            .replaceError(with: UIImage(systemName: "photo.circle.fill"))
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] image in
+                self?.albumCover.image = image
+            })
+            .store(in: &subscriptions)
     }
     
     func setupConstraints() {
@@ -97,9 +115,10 @@ class PlayInfoView: UIView {
 
         NSLayoutConstraint.activate([
             albumCover.topAnchor.constraint(equalTo: topInfoView.bottomAnchor, constant: padding),
-            albumCover.widthAnchor.constraint(equalToConstant: viewFrame.width / 2),
-            albumCover.heightAnchor.constraint(equalToConstant: viewFrame.height / 2),
+            albumCover.widthAnchor.constraint(equalToConstant: viewFrame.width  / 1.5),
+            albumCover.heightAnchor.constraint(equalTo: widthAnchor),
             albumCover.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
     }
+    
 }

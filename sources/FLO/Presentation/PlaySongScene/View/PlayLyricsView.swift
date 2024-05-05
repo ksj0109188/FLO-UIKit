@@ -8,7 +8,7 @@
 import UIKit
 import AVKit
 
-class PlayLyricsView: UIView {
+final class PlayLyricsView: UIView {
     var viewModel: PlaySongSceneViewModel! {
         didSet {
             viewModel.playerManager.observer { [weak self] time in
@@ -48,7 +48,8 @@ class PlayLyricsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupViews() {
+    //TODO: Private 전체적으로 추가 필요
+    private func setupViews() {
         addSubviews(firstLyricsLabel, secondLyricsLabel)
     }
     
@@ -58,14 +59,16 @@ class PlayLyricsView: UIView {
     }
 
     
-    func setupConstraints() {
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
             firstLyricsLabel.topAnchor.constraint(equalTo: topAnchor),
             firstLyricsLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
             firstLyricsLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             firstLyricsLabel.widthAnchor.constraint(equalTo: widthAnchor),
             firstLyricsLabel.heightAnchor.constraint(equalTo: heightAnchor),
-            
+        ])
+        
+        NSLayoutConstraint.activate([
             secondLyricsLabel.topAnchor.constraint(equalTo: firstLyricsLabel.bottomAnchor),
             secondLyricsLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
             secondLyricsLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -74,7 +77,8 @@ class PlayLyricsView: UIView {
         ])
     }
     
-    func configure(with songDTO: SongDTO) {
+    func configure(with songDTO: SongDTO, viewModel: PlaySongSceneViewModel) {
+        self.viewModel = viewModel
         let timeLineLyrics = songDTO.timeLineLyrics
         let transformedLyrics = songDTO.transformedLyrics
     
@@ -84,7 +88,7 @@ class PlayLyricsView: UIView {
         }
     }
     
-    private func updateUI(time: CMTime = CMTime(value: CMTimeValue(0.0), timescale: 1)) {
+    func updateUI(time: CMTime = CMTime(value: CMTimeValue(0.0), timescale: 1)) {
         let lyrics = viewModel.syncLyrics(time: time, inputTimeType: .seconds)
         //TODO: Font상수화나 extension으로 별도 파일로 관리하기
         if lyrics.count == 2 {

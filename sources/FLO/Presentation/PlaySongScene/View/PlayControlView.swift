@@ -8,20 +8,22 @@
 import UIKit
 import AVKit
 
-class PlayControlView: UIView {
+//TODO: Delegate 다시 생각해보기
+//TODO: PlayControl 공통 컴포넌트로 분리하기
+protocol PlayControlDelegate: AnyObject {
+    func togglePlayPause()
+    func sliderValueChanged(to value: Float)
+}
+
+final class PlayControlView: UIView {
     weak var delegate: PlayControlDelegate?
-    var viewModel: PlaySongSceneViewModel! {
-        didSet {
-            viewModel.playerManager.observer { [weak self] time in
-                self?.updateUI(time: time)
-            }
-        }
-    }
+    private var isSliderBeingTouched = false
     
     private lazy var seekSlider: UISlider = {
         let slider = UISlider()
         slider.minimumValue = 0.0
-        slider.addTarget(self, action: #selector(seekSliderChanged(_:)), for: .valueChanged)
+        slider.addTarget(self, action: #selector(sliderTouchDown(_:)), for: .touchDown)
+        slider.addTarget(self, action: #selector(seekSliderChanged(_:)), for: .touchUpInside)
         slider.translatesAutoresizingMaskIntoConstraints = false
         
         return slider
@@ -63,7 +65,9 @@ class PlayControlView: UIView {
             seekSlider.topAnchor.constraint(equalTo: topAnchor),
             seekSlider.leadingAnchor.constraint(equalTo: leadingAnchor),
             seekSlider.widthAnchor.constraint(equalTo: widthAnchor),
-            
+        ])
+        
+        NSLayoutConstraint.activate([
             playButton.topAnchor.constraint(equalTo: seekSlider.bottomAnchor),
             playButton.bottomAnchor.constraint(equalTo: bottomAnchor),
             playButton.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -71,15 +75,29 @@ class PlayControlView: UIView {
         ])
     }
     
-    private func updateUI(time: CMTime) {
-        seekSlider.value = Float(time.seconds)
+    func updateUI(time: CMTime) {
+        if !isSliderBeingTouched {
+            seekSlider.value = Float(time.seconds)
+        }
     }
     
     @objc func seekSliderChanged(_ sender: UISlider) {
         delegate?.sliderValueChanged(to: sender.value)
+        ///notes: updateUI를 통해 두번 seekSlider value가 업데이트 되는걸 방지
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.1, execute: DispatchWorkItem(block: {
+            self.allowSliderUpdate()
+        }))
     }
-
+    
     @objc func togglePlayPause() {
         delegate?.togglePlayPause()
+    }
+    
+    private func allowSliderUpdate() {
+        isSliderBeingTouched = false
+    }
+    
+    @objc func sliderTouchDown(_ sender: UISlider) {
+        isSliderBeingTouched = true
     }
 }

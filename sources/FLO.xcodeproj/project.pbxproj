@@ -26,6 +26,7 @@
 		3B98C21E2BE3C8EC00842EAE /* DetailLyricsSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B98C21D2BE3C8EC00842EAE /* DetailLyricsSceneViewController.swift */; };
 		3B98C2222BE3DE3500842EAE /* DetailLyricsSceneNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B98C2212BE3DE3500842EAE /* DetailLyricsSceneNavigationBar.swift */; };
 		3B98C2242BE4A91200842EAE /* DetailLyricsTableSidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B98C2232BE4A91200842EAE /* DetailLyricsTableSidebarView.swift */; };
+		3B98C2282BE72F8900842EAE /* FontSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B98C2272BE72F8900842EAE /* FontSize.swift */; };
 		3BB3B0232BD258B200CBE341 /* PlaySongSceneViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BB3B0222BD258B200CBE341 /* PlaySongSceneViewModel.swift */; };
 		3BB3B0272BD3CA5600CBE341 /* DetailLyricsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BB3B0262BD3CA5600CBE341 /* DetailLyricsTableViewController.swift */; };
 		3BD5333C2BCCFC3200F1CE3C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD5333B2BCCFC3200F1CE3C /* AppDelegate.swift */; };
@@ -80,6 +81,7 @@
 		3B98C21D2BE3C8EC00842EAE /* DetailLyricsSceneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailLyricsSceneViewController.swift; sourceTree = "<group>"; };
 		3B98C2212BE3DE3500842EAE /* DetailLyricsSceneNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailLyricsSceneNavigationBar.swift; sourceTree = "<group>"; };
 		3B98C2232BE4A91200842EAE /* DetailLyricsTableSidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailLyricsTableSidebarView.swift; sourceTree = "<group>"; };
+		3B98C2272BE72F8900842EAE /* FontSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontSize.swift; sourceTree = "<group>"; };
 		3BB3B0222BD258B200CBE341 /* PlaySongSceneViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaySongSceneViewModel.swift; sourceTree = "<group>"; };
 		3BB3B0262BD3CA5600CBE341 /* DetailLyricsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailLyricsTableViewController.swift; sourceTree = "<group>"; };
 		3BD533382BCCFC3200F1CE3C /* FLO.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FLO.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -305,6 +307,14 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		3B98C2292BE7303500842EAE /* Style */ = {
+			isa = PBXGroup;
+			children = (
+				3B98C2272BE72F8900842EAE /* FontSize.swift */,
+			);
+			path = Style;
+			sourceTree = "<group>";
+		};
 		3BD5332F2BCCFC3200F1CE3C = {
 			isa = PBXGroup;
 			children = (
@@ -372,6 +382,7 @@
 				3B62502C2BE3A47100E15293 /* TimeType.swift */,
 				3B62502E2BE3A49A00E15293 /* HighLighType.swift */,
 				3B2E59F82BD1572E000443FD /* PlayerManager.swift */,
+				3B98C2292BE7303500842EAE /* Style */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -514,6 +525,7 @@
 				3B94ACE22BD926AF00C17F08 /* PlaySongFlowCoordinator.swift in Sources */,
 				3BD533762BCE930800F1CE3C /* UIView+Extensions.swift in Sources */,
 				3BD5336D2BCD5BFB00F1CE3C /* Song.swift in Sources */,
+				3B98C2282BE72F8900842EAE /* FontSize.swift in Sources */,
 				3B98C2222BE3DE3500842EAE /* DetailLyricsSceneNavigationBar.swift in Sources */,
 				3BB3B0232BD258B200CBE341 /* PlaySongSceneViewModel.swift in Sources */,
 				3B94ACD72BD9266A00C17F08 /* WebRepository.swift in Sources */,
