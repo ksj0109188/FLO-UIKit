@@ -14,12 +14,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = scene as? UIWindowScene else { return }
-        
+
         let navigationController = UINavigationController()
         appFlowCoordinator = AppFlowCoordinator(
             navigationController: navigationController,
             appDIContainer: appDIContainer
         )
+        
+        ///note: 런치스크린을 강제로 2초동안 표출하기 위해 Main 스레드를 2초간 대기상태로 돌리는 코드
+        Thread.sleep(forTimeInterval: 2.0)
         appFlowCoordinator?.start()
         
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
