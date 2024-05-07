@@ -192,7 +192,6 @@
 				3BD5333F2BCCFC3200F1CE3C /* PlaySongSceneViewController.swift */,
 				3BD533732BCE533700F1CE3C /* PlayInfoView.swift */,
 				3B2E59FC2BD17037000443FD /* PlayLyricsView.swift */,
-				3BD533782BCEB9DA00F1CE3C /* PlayControlView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -308,6 +307,14 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		3B98C22E2BEA72C400842EAE /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				3BD533782BCEB9DA00F1CE3C /* PlayControlView.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
 		3BD5332F2BCCFC3200F1CE3C = {
 			isa = PBXGroup;
 			children = (
@@ -362,6 +369,7 @@
 			isa = PBXGroup;
 			children = (
 				3B6250292BE2943F00E15293 /* Flow */,
+				3B98C22E2BEA72C400842EAE /* Common */,
 				3B94ACD12BD9252200C17F08 /* PlaySongScene */,
 				3B762EEA2BD3CC200023741B /* DetailLyrics */,
 			);
