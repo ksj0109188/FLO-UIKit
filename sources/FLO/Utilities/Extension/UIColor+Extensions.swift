@@ -8,5 +8,6 @@
 import UIKit
 
 extension UIColor {
-    static let defaultSystemColor = UIColor(named: "DefaultColor")
+    static let systemDefaultColor = UIColor(named: "DefaultColor")!
+    static let buttonColor = UIColor(named: "ButtonColor")!
 }
