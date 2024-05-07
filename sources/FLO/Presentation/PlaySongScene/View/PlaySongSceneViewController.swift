@@ -32,19 +32,19 @@ final class PlaySongSceneViewController: UIViewController {
         return view
     }()
     
-    //TODO: private viewModel create함수 처럼 내부 함수로 설정하도록 변경하기
     private lazy var playControlView: PlayControlView = {
+        let playerManager = viewModel.playerManager
         let view = PlayControlView()
+
         view.delegate = self
         viewModel.songSubject
             .sink(receiveValue: {
-                view.configure(with: $0)
-                self.viewModel.playerManager.observer { time in
+                view.configure(with: $0, playerPuasedObserver: playerManager.isPausedSubject, time: playerManager.playerTime())
+                playerManager.observer { time in
                     view.updateUI(time: time)
                 }
             })
             .store(in: &subscriptions)
-        
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
@@ -92,11 +92,10 @@ final class PlaySongSceneViewController: UIViewController {
             lyricsView.leadingAnchor.constraint(equalTo: playInfoView.leadingAnchor),
             lyricsView.trailingAnchor.constraint(equalTo: playInfoView.trailingAnchor),
             lyricsView.heightAnchor.constraint(equalToConstant: viewFrame.height / 1.5),
-            lyricsView.bottomAnchor.constraint(equalTo: playControlView.topAnchor),
         ])
         
         NSLayoutConstraint.activate([
-            playControlView.topAnchor.constraint(equalTo: lyricsView.bottomAnchor),
+            playControlView.topAnchor.constraint(equalTo: lyricsView.bottomAnchor, constant: padding),
             playControlView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
             playControlView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             playControlView.widthAnchor.constraint(equalTo: safeArea.widthAnchor),
@@ -112,7 +111,7 @@ final class PlaySongSceneViewController: UIViewController {
 
 extension PlaySongSceneViewController: PlayControlDelegate {
     func togglePlayPause() {
-        viewModel.playerManager.pausePlayer()
+        viewModel.playerManager.togglePlayPause()
     }
     
     func sliderValueChanged(to value: Float) {

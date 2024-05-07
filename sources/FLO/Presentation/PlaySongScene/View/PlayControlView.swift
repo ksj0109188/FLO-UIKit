@@ -7,6 +7,7 @@
 
 import UIKit
 import AVKit
+import Combine
 
 //TODO: Delegate 다시 생각해보기
 //TODO: PlayControl 공통 컴포넌트로 분리하기
@@ -18,12 +19,17 @@ protocol PlayControlDelegate: AnyObject {
 final class PlayControlView: UIView {
     weak var delegate: PlayControlDelegate?
     private var isSliderBeingTouched = false
-    private var isPlayButtonTouched = false
+    private var isPlayerPuased = true {
+        didSet {
+            updatePlayButtonImage()
+        }
+    }
+    private var subscriptions = Set<AnyCancellable>()
     
     private var minValueLabel: UILabel = {
         let label = UILabel()
         label.text = "00:00"
-        label.textColor = .white
+        label.textColor = .buttonColor
         label.font = .subContentFont
         label.translatesAutoresizingMaskIntoConstraints = false
         
@@ -44,7 +50,7 @@ final class PlayControlView: UIView {
         let transparentImage = UIGraphicsImageRenderer(size: CGSize(width: 25, height: 25)).image { _ in }
         
         slider.minimumValue = 0.0
-        slider.tintColor = UIColor(named: "SeekbarColor")
+        slider.tintColor = .buttonColor
         slider.setThumbImage(transparentImage, for: .normal)
         slider.addTarget(self, action: #selector(sliderTouchDown(_:)), for: .touchDown)
         slider.addTarget(self, action: #selector(seekSliderChanged(_:)), for: .touchUpInside)
@@ -69,9 +75,7 @@ final class PlayControlView: UIView {
     
     private lazy var playButton: UIButton = {
         let button = UIButton(type: .system)
-        let image = playImage
-        button.setImage(image, for: .normal)
-        button.addTarget(self, action: #selector(togglePlayPause), for: .touchUpInside)
+        button.addTarget(self, action: #selector(togglePlayerState), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         
         return button
@@ -91,9 +95,15 @@ final class PlayControlView: UIView {
         addSubviews(seekSlider, minValueLabel, maxValueLabel, playButton)
     }
     
-    func configure(with songDTO: SongDTO) {
+    func configure(with songDTO: SongDTO, playerPuasedObserver: CurrentValueSubject<Bool, Never>, time: CMTime) {
         seekSlider.maximumValue = Float(songDTO.duration)
+        updateUI(time: time)
         maxValueLabel.text = formatSecondsToMinutesSeconds(songDTO.duration)
+        
+        playerPuasedObserver.sink { [weak self] in
+            self?.isPlayerPuased = $0
+        }
+        .store(in: &subscriptions)
     }
     
     private func setupConstraints() {
@@ -116,9 +126,7 @@ final class PlayControlView: UIView {
         
         NSLayoutConstraint.activate([
             playButton.topAnchor.constraint(equalTo: seekSlider.bottomAnchor),
-            playButton.bottomAnchor.constraint(equalTo: bottomAnchor),
-            playButton.leadingAnchor.constraint(equalTo: leadingAnchor),
-            playButton.trailingAnchor.constraint(equalTo: trailingAnchor),
+            playButton.centerXAnchor.constraint(equalTo: centerXAnchor),
             playButton.heightAnchor.constraint(equalToConstant: 250.0),
             playButton.widthAnchor.constraint(equalToConstant: 250.0)
         ])
@@ -149,14 +157,16 @@ final class PlayControlView: UIView {
         }))
     }
     
-    @objc func togglePlayPause() {
-        let image = isPlayButtonTouched ? playImage : pauseImage
-        playButton.setImage(image, for: .normal)
+    @objc func togglePlayerState() {
         delegate?.togglePlayPause()
-        isPlayButtonTouched.toggle()
     }
     
     @objc func sliderTouchDown(_ sender: UISlider) {
         isSliderBeingTouched = true
+    }
+    
+    private func updatePlayButtonImage() {
+        let image = isPlayerPuased ? playImage : pauseImage
+        playButton.setImage(image, for: .normal)
     }
 }
