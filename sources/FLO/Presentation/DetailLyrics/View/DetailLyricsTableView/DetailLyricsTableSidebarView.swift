@@ -17,17 +17,17 @@ class DetailLyricsTableSidebarView: UIView {
     }
     
     private lazy var toggleOnImage: UIImage = {
-        let image = UIImage(systemName: "music.note.list")!
-        image.withTintColor(.purple)
+        let configuration = UIImage.SymbolConfiguration(font: UIFont.titleFont)
+        let image = UIImage(systemName: "music.note.list", withConfiguration: configuration)?.withTintColor(.buttonColor, renderingMode: .alwaysOriginal)
         
-        return image
+        return image!
     }()
     
     private lazy var toggleOffImage: UIImage = {
-        let image = UIImage(systemName: "circle.fill")!
-        image.withTintColor(.gray)
+        let configuration = UIImage.SymbolConfiguration(font: UIFont.titleFont)
+        let image = UIImage(systemName: "list.bullet", withConfiguration: configuration)?.withTintColor(.buttonColor, renderingMode: .alwaysOriginal)
         
-        return image
+        return image!
     }()
     
     private lazy var sideStackView: UIStackView = {

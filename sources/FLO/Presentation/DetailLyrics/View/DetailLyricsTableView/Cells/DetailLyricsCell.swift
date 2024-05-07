@@ -13,6 +13,7 @@ class DetailLyricsCell: UITableViewCell {
     private lazy var width: Double = 0.0
     private lazy var lyricsLabel: UILabel = {
         let label = UILabel()
+        label.textColor = .gray
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 2
         
@@ -21,7 +22,7 @@ class DetailLyricsCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
+        self.backgroundColor = .black
         setupViews()
         setupConstraints()
     }
@@ -49,11 +50,13 @@ class DetailLyricsCell: UITableViewCell {
     }
     
     func highlight() {
-        self.lyricsLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        self.lyricsLabel.font = .contentBoldFont
+        self.lyricsLabel.textColor = .white
     }
     
-    func unHighlihg() {
-        self.lyricsLabel.font = UIFont.systemFont(ofSize: 16)
+    func disHighlight() {
+        self.lyricsLabel.font = .contentFont
+        self.lyricsLabel.textColor = .gray
     }
 
 }

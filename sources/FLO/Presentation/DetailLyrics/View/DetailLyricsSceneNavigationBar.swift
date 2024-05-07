@@ -15,7 +15,7 @@ final class DetailLyricsSceneNavigationBar: UIView {
         stackView.axis = .horizontal
         stackView.spacing = 5.0
         stackView.alignment = .fill
-        stackView.distribution = .fillEqually
+        stackView.distribution = .fill
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         return stackView
@@ -34,7 +34,7 @@ final class DetailLyricsSceneNavigationBar: UIView {
     
     private lazy var title: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        label.font = .titleBoldFont
         label.textColor = .white
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -44,7 +44,7 @@ final class DetailLyricsSceneNavigationBar: UIView {
     
     private lazy var signerName: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
+        label.font = .subTitleFont
         label.textColor = .white
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -53,7 +53,10 @@ final class DetailLyricsSceneNavigationBar: UIView {
     
     private lazy var dismissButton: UIButton = {
         let button = UIButton()
-        button.setTitle("X", for: .normal)
+        let configuration = UIImage.SymbolConfiguration(font: UIFont.titleFont)
+        let image = UIImage(systemName: "xmark", withConfiguration: configuration)?.withTintColor(.white, renderingMode: .alwaysOriginal)
+        
+        button.setImage(image, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(dismiss), for: .touchDown)
         
@@ -63,6 +66,7 @@ final class DetailLyricsSceneNavigationBar: UIView {
     private override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
+        setupConstraints()
     }
     
     func configure(with song: SongDTO){
@@ -74,13 +78,29 @@ final class DetailLyricsSceneNavigationBar: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupViews() {
+    private func setupViews() {
         songInfoStack.addArrangedSubview(title)
         songInfoStack.addArrangedSubview(signerName)
         navigationBarStack.addArrangedSubview(songInfoStack)
         navigationBarStack.addArrangedSubview(dismissButton)
         
         addSubviews(navigationBarStack)
+    }
+    
+    private func setupConstraints() {
+        let padding = 20.0
+        
+        NSLayoutConstraint.activate([
+            dismissButton.leadingAnchor.constraint(equalTo: songInfoStack.trailingAnchor),
+            dismissButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
+        ])
+        
+        NSLayoutConstraint.activate([
+            navigationBarStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
+            navigationBarStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: padding),
+            navigationBarStack.topAnchor.constraint(equalTo: topAnchor),
+            navigationBarStack.centerXAnchor.constraint(equalTo: centerXAnchor)
+        ])
     }
     
     @objc func dismiss() {

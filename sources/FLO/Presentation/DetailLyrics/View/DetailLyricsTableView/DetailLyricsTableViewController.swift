@@ -15,7 +15,7 @@ protocol DetailLyricsTableViewDelegate: AnyObject {
 class DetailLyricsTableViewController: UIViewController {
     weak var delegate: DetailLyricsSceneViewControllerDelegate?
     private var isLyricsSelect: Bool = false
-    
+    private var focusedLyricsIndex: Int = 0
     var viewModel: DetailLyricsViewModel! {
         didSet {
             viewModel.playerManager.observer { [weak self] time in
@@ -29,6 +29,7 @@ class DetailLyricsTableViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
         tableView.register(DetailLyricsCell.self, forCellReuseIdentifier: DetailLyricsCell.reuseIdentifier)
+        tableView.backgroundColor = .black
         tableView.delegate = self
         tableView.dataSource = self
         
@@ -59,11 +60,13 @@ class DetailLyricsTableViewController: UIViewController {
         view.addSubview(detailLyricsSceneSidebarView)
     }
     
-    func config(viewModel: DetailLyricsViewModel) {
+    func config(viewModel: DetailLyricsViewModel, time: CMTime) {
         self.viewModel = viewModel
+        self.updateUI(time: time)
     }
     
     private func setupConstraints() {
+        let padding = 20.0
         NSLayoutConstraint.activate([
             detailLyricsSceneSidebarView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             detailLyricsSceneSidebarView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
@@ -73,8 +76,8 @@ class DetailLyricsTableViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: padding),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: padding),
             tableView.widthAnchor.constraint(equalTo: view.widthAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
@@ -82,14 +85,15 @@ class DetailLyricsTableViewController: UIViewController {
     
     private func updateUI(time: CMTime) {
         let targetIndex =  viewModel.getCurrentLyricsIndex(time: time, inputTimeType: .seconds)
+        focusedLyricsIndex = targetIndex
         
+        if let prevCell = tableView.cellForRow(at: IndexPath(row: prevIndex, section: 0)) as? DetailLyricsCell {
+            prevCell.disHighlight()
+        }
         if let visibleIndexPaths = tableView.indexPathsForVisibleRows, visibleIndexPaths.contains(IndexPath(row: targetIndex, section: 0)) {
-            if let prevCell = tableView.cellForRow(at: IndexPath(row: prevIndex, section: 0)) as? DetailLyricsCell {
-                prevCell.unHighlihg()
-            }
-            
             if let cell = tableView.cellForRow(at: IndexPath(row: targetIndex, section: 0)) as? DetailLyricsCell {
                 prevIndex = targetIndex
+                
                 cell.highlight()
             }
         }
@@ -112,8 +116,12 @@ extension DetailLyricsTableViewController: UITableViewDelegate {
         let timeLine = viewModel.songDTO.timeLineLyrics
         
         cell.configure(lyrics: Lyrics[timeLine[indexPath.row]] ?? "", width: sidebarWidth)
-        cell.unHighlihg()
         
+        if indexPath.row == focusedLyricsIndex {
+            cell.highlight()
+        } else {
+            cell.disHighlight()
+        }
         return cell
     }
     

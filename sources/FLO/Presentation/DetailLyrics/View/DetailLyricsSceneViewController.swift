@@ -19,7 +19,8 @@ final class DetailLyricsSceneViewController: UIViewController {
     
     private lazy var detailLyricsTableView: DetailLyricsTableViewController = {
         let tableView = DetailLyricsTableViewController()
-        tableView.config(viewModel: viewModel)
+        let playerManager = viewModel.playerManager
+        tableView.config(viewModel: viewModel, time: playerManager.playerTime())
         tableView.delegate = self
         tableView.view.translatesAutoresizingMaskIntoConstraints = false
         
@@ -36,12 +37,15 @@ final class DetailLyricsSceneViewController: UIViewController {
     }()
     
     private lazy var playControlView: PlayControlView = {
+        let playerManager = viewModel.playerManager
         let view = PlayControlView()
+        
         view.delegate = self
-        viewModel.playerManager.observer { time in
+        playerManager.observer { time in
             view.updateUI(time: time)
         }
-        view.configure(with: viewModel.songDTO)
+        
+        view.configure(with: viewModel.songDTO, playerPuasedObserver: playerManager.isPausedSubject, time: playerManager.playerTime())
         view.translatesAutoresizingMaskIntoConstraints = false
         
         return view
@@ -70,23 +74,25 @@ final class DetailLyricsSceneViewController: UIViewController {
     
     private func setupConstraints() {
         let safeArea = view.safeAreaLayoutGuide
+        let padding = 20.0
+        let frame = view.frame
         
         NSLayoutConstraint.activate([
-            detailLyricsSceneNavigationBar.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            detailLyricsSceneNavigationBar.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: padding),
             detailLyricsSceneNavigationBar.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             detailLyricsSceneNavigationBar.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            detailLyricsSceneNavigationBar.heightAnchor.constraint(equalToConstant: 44)
+            detailLyricsSceneNavigationBar.heightAnchor.constraint(equalToConstant: frame.height / 10)
         ])
         
         NSLayoutConstraint.activate([
             detailLyricsTableView.view.topAnchor.constraint(equalTo: detailLyricsSceneNavigationBar.bottomAnchor),
-            detailLyricsTableView.view.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-            detailLyricsTableView.view.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            detailLyricsTableView.view.leadingAnchor.constraint(equalTo: detailLyricsSceneNavigationBar.leadingAnchor),
+            detailLyricsTableView.view.trailingAnchor.constraint(equalTo: detailLyricsSceneNavigationBar.trailingAnchor),
             detailLyricsTableView.view.heightAnchor.constraint(equalTo: safeArea.heightAnchor, multiplier: 0.5)
         ])
         
         NSLayoutConstraint.activate([
-            playControlView.topAnchor.constraint(equalTo: detailLyricsTableView.view.bottomAnchor),
+            playControlView.topAnchor.constraint(equalTo: detailLyricsTableView.view.bottomAnchor, constant: padding),
             playControlView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             playControlView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             playControlView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
@@ -102,7 +108,7 @@ extension DetailLyricsSceneViewController: DetailLyricsSceneViewControllerDelega
 
 extension DetailLyricsSceneViewController: PlayControlDelegate {
     func togglePlayPause() {
-        viewModel.playerManager.pausePlayer()
+        viewModel.playerManager.togglePlayPause()
     }
     
     func sliderValueChanged(to value: Float) {

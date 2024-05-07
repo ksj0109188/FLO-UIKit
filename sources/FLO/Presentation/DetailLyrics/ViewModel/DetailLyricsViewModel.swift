@@ -59,6 +59,4 @@ final class DetailLyricsViewModel: DetailLyricsViewModelInOutput, PlayableViewMo
     func dismissDetailLyricsView() {
         actions.dismissDetailLyricsView()
     }
-    
-    
 }
