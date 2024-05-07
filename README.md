@@ -5,13 +5,13 @@
 - UIKit Codebase, Combine framework를 활용 하였습니다.
 - 기능개발과 더불어 유지보수가 용이한 구조와 코드 작성을 고민하며 개발을 진행했습니다.
 
-### Skills
+## Skills
 - UIKit(Code base), AutoLayout, AVKit
 - Combine
 - Clean Architecture with MVVM
 - Coordinator, Delegate Pattern
   
-### 프로젝트 요구사항
+## 프로젝트 요구사항
 - 언어: Swift
 - Deployment Target: iOS 10.0 -> combine사용을 위해 iOS 13.0으로 변경(자체적으로 하는 테스트이므로 임시로 변경했습니다.)
   
