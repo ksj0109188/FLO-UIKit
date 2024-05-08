@@ -9,8 +9,6 @@ import UIKit
 import AVKit
 import Combine
 
-//TODO: Delegate 다시 생각해보기
-//TODO: PlayControl 공통 컴포넌트로 분리하기
 protocol PlayControlDelegate: AnyObject {
     func togglePlayPause()
     func sliderValueChanged(to value: Float)
