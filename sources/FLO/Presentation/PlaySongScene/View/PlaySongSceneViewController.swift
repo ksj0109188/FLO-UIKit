@@ -79,7 +79,7 @@ final class PlaySongSceneViewController: UIViewController {
         let safeArea = view.safeAreaLayoutGuide
         let viewFrame = view.bounds
         let padding = 20.0
-        print(viewFrame.height)
+        
         NSLayoutConstraint.activate([
             playInfoView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: padding),
             playInfoView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
