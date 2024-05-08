@@ -40,7 +40,7 @@ final class DetailLyricsViewModel: DetailLyricsViewModelInOutput, PlayableViewMo
     }
     
     func getCurrentLyricsIndex(time: CMTime, inputTimeType: TimeType) -> Int {
-        let milliseconds: Int
+        var milliseconds = 0
         
         switch inputTimeType {
             case .milSeconds:

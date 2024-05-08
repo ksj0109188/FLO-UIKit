@@ -30,16 +30,6 @@ class DetailLyricsTableSidebarView: UIView {
         return image!
     }()
     
-    private lazy var sideStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.alignment = .fill
-        stackView.distribution = .fill
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        return stackView
-    }()
-    
     private lazy var toggleButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -47,13 +37,6 @@ class DetailLyricsTableSidebarView: UIView {
         button.addTarget(self, action: #selector(toggleButtonTapped), for: .touchUpInside)
         
         return button
-    }()
-    
-    private lazy var fillerView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        
-        return view
     }()
     
     private func updateButtonAppearance() {
@@ -72,24 +55,16 @@ class DetailLyricsTableSidebarView: UIView {
     }
     
     private func setupViews() {
-        sideStackView.addArrangedSubview(fillerView)
-        sideStackView.addArrangedSubview(toggleButton)
-        addSubviews(sideStackView)
+        addSubviews(toggleButton)
     }
     
     private func setupConstraints() {
+        let safeArea = safeAreaLayoutGuide
+        let padding = 20.0
         NSLayoutConstraint.activate([
-            sideStackView.topAnchor.constraint(equalTo: topAnchor),
-            sideStackView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            sideStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            sideStackView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            sideStackView.widthAnchor.constraint(equalTo: widthAnchor),
-            sideStackView.heightAnchor.constraint(equalTo: heightAnchor)
-        ])
-        
-        NSLayoutConstraint.activate([
-            toggleButton.widthAnchor.constraint(equalToConstant: 200),
-            toggleButton.heightAnchor.constraint(equalToConstant: 100)
+            toggleButton.topAnchor.constraint(equalTo: topAnchor),
+            toggleButton.leadingAnchor.constraint(equalTo: leadingAnchor),
+            toggleButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: padding),
         ])
     }
     

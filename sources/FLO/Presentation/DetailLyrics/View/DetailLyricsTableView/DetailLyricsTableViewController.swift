@@ -16,6 +16,12 @@ class DetailLyricsTableViewController: UIViewController {
     weak var delegate: DetailLyricsSceneViewControllerDelegate?
     private var isLyricsSelect: Bool = false
     private var focusedLyricsIndex: Int = 0
+    private var prevIndex = 0
+    
+    private lazy var sidebarWidth: CGFloat = {
+        return view.bounds.width / 5
+    }()
+    
     var viewModel: DetailLyricsViewModel! {
         didSet {
             viewModel.playerManager.observer { [weak self] time in
@@ -44,11 +50,6 @@ class DetailLyricsTableViewController: UIViewController {
         return view
     }()
     
-    private var prevIndex = 0
-    private lazy var sidebarWidth: CGFloat = {
-        return view.bounds.width / 5
-    }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
@@ -66,20 +67,21 @@ class DetailLyricsTableViewController: UIViewController {
     }
     
     private func setupConstraints() {
+        let safeArea = view.safeAreaLayoutGuide
         let padding = 20.0
+        
         NSLayoutConstraint.activate([
             detailLyricsSceneSidebarView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             detailLyricsSceneSidebarView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            detailLyricsSceneSidebarView.widthAnchor.constraint(equalToConstant: sidebarWidth),
+            detailLyricsSceneSidebarView.widthAnchor.constraint(equalToConstant: view.bounds.width / 5),
             detailLyricsSceneSidebarView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ])
         
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: padding),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: padding),
-            tableView.widthAnchor.constraint(equalTo: view.widthAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            tableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: padding),
+            tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
         ])
     }
     
@@ -110,18 +112,17 @@ extension DetailLyricsTableViewController: UITableViewDataSource {
 extension DetailLyricsTableViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: DetailLyricsCell.reuseIdentifier, for: indexPath) as? DetailLyricsCell else { return UITableViewCell() }
-        adjustCellWidth(cell: cell)
-        
         let Lyrics = viewModel.songDTO.transformedLyrics
         let timeLine = viewModel.songDTO.timeLineLyrics
         
-        cell.configure(lyrics: Lyrics[timeLine[indexPath.row]] ?? "", width: sidebarWidth)
+        cell.configure(lyrics: Lyrics[timeLine[indexPath.row]] ?? "")
         
         if indexPath.row == focusedLyricsIndex {
             cell.highlight()
         } else {
             cell.disHighlight()
         }
+        
         return cell
     }
     
@@ -138,13 +139,6 @@ extension DetailLyricsTableViewController: UITableViewDelegate {
         viewModel.playerManager.moveToTimeLine(to: CMTimeMake(value: Int64(second), timescale: 1))
     }
     
-    private func adjustCellWidth(cell: UITableViewCell) {
-        let viewWidth = view.bounds.width
-        
-        NSLayoutConstraint.activate([
-            cell.widthAnchor.constraint(equalToConstant: viewWidth - sidebarWidth - 5)
-        ])
-    }
 }
 
 extension DetailLyricsTableViewController : DetailLyricsTableViewDelegate {

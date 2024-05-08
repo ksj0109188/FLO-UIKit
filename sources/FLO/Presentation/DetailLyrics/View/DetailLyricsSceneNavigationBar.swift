@@ -37,7 +37,6 @@ final class DetailLyricsSceneNavigationBar: UIView {
         label.font = .titleBoldFont
         label.textColor = .white
         label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
     }()
@@ -45,9 +44,9 @@ final class DetailLyricsSceneNavigationBar: UIView {
     private lazy var signerName: UILabel = {
         let label = UILabel()
         label.font = .subTitleFont
-        label.textColor = .white
+        label.textColor = .gray
         label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
+        
         return label
     }()
     
@@ -57,7 +56,6 @@ final class DetailLyricsSceneNavigationBar: UIView {
         let image = UIImage(systemName: "xmark", withConfiguration: configuration)?.withTintColor(.white, renderingMode: .alwaysOriginal)
         
         button.setImage(image, for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(dismiss), for: .touchDown)
         
         return button
@@ -91,13 +89,7 @@ final class DetailLyricsSceneNavigationBar: UIView {
         let padding = 20.0
         
         NSLayoutConstraint.activate([
-            dismissButton.leadingAnchor.constraint(equalTo: songInfoStack.trailingAnchor),
-            dismissButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
-        ])
-        
-        NSLayoutConstraint.activate([
             navigationBarStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
-            navigationBarStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: padding),
             navigationBarStack.topAnchor.constraint(equalTo: topAnchor),
             navigationBarStack.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])

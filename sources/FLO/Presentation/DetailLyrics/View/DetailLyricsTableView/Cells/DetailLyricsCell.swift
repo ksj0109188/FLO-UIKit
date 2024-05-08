@@ -10,7 +10,6 @@ import UIKit
 class DetailLyricsCell: UITableViewCell {
     static let reuseIdentifier = String(describing: DetailLyricsCell.self)
     
-    private lazy var width: Double = 0.0
     private lazy var lyricsLabel: UILabel = {
         let label = UILabel()
         label.textColor = .gray
@@ -27,8 +26,7 @@ class DetailLyricsCell: UITableViewCell {
         setupConstraints()
     }
     
-    func configure(lyrics: String, width: Double) {
-        self.width = width
+    func configure(lyrics: String) {
         lyricsLabel.text = lyrics
     }
     
