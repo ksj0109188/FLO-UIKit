@@ -39,9 +39,7 @@ final class PlaySongSceneViewController: UIViewController {
         viewModel.songSubject
             .sink(receiveValue: {
                 view.configure(with: $0, playerPuasedObserver: playerManager.isPausedSubject, time: playerManager.playerTime())
-                playerManager.observer { time in
-                    view.updateUI(time: time)
-                }
+                playerManager.observer { view.updateUI(time: $0) }
             })
             .store(in: &subscriptions)
         view.translatesAutoresizingMaskIntoConstraints = false

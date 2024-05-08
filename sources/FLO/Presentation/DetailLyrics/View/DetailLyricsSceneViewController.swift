@@ -40,9 +40,7 @@ final class DetailLyricsSceneViewController: UIViewController {
         let playerManager = viewModel.playerManager
         let view = PlayControlView()
         
-        playerManager.observer { time in
-            view.updateUI(time: time)
-        }
+        playerManager.observer { view.updateUI(time: $0) }
         view.delegate = self
         view.configure(with: viewModel.songDTO, playerPuasedObserver: playerManager.isPausedSubject, time: playerManager.playerTime())
         view.translatesAutoresizingMaskIntoConstraints = false
