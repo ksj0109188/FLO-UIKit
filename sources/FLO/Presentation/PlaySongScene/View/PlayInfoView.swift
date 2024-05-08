@@ -37,7 +37,6 @@ class PlayInfoView: UIView {
         label.font = .titleBoldFont
         label.textAlignment = .center
         label.textColor = .white
-        label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
     }()
@@ -47,7 +46,7 @@ class PlayInfoView: UIView {
         label.font = .subTitleFont
         label.textColor = .white
         label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
+        
         return label
     }()
     
@@ -78,10 +77,6 @@ class PlayInfoView: UIView {
         topInfoView.addArrangedSubview(signerName)
         
         addSubviews(topInfoView, albumCover)
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
     }
     
     func configure(with song: SongDTO){

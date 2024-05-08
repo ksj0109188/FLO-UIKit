@@ -53,7 +53,6 @@ final class PlayLyricsView: UIView {
     private func setupViews() {
         addSubviews(firstLyricsLabel, secondLyricsLabel)
     }
-
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
@@ -83,7 +82,7 @@ final class PlayLyricsView: UIView {
     
     func updateUI(time: CMTime = CMTime(value: CMTimeValue(0.0), timescale: 1)) {
         let lyrics = viewModel.syncLyrics(time: time, inputTimeType: .seconds)
-        //TODO: Font상수화나 extension으로 별도 파일로 관리하기
+
         if lyrics.count == 2 {
             if lyrics[0].1 == .HighLight {
                 firstLyricsLabel.font =  .contentBoldFont
