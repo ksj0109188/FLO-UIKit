@@ -23,12 +23,12 @@ protocol DetailLyricsViewModelInput {
 protocol DetailLyricsViewModelOutput {
     var songDTO: SongDTO {get}
     var playerManager: PlayerManager {get}
+    func getCurrentLyricsIndex(time: CMTime, inputTimeType: TimeType) -> Int 
 }
 
 typealias DetailLyricsViewModelInOutput = DetailLyricsViewModelInput & DetailLyricsViewModelOutput
 
 final class DetailLyricsViewModel: DetailLyricsViewModelInOutput, PlayableViewModel {
-    
     var songDTO: SongDTO
     var playerManager: PlayerManager
     private let actions: DetailLyricsViewModelActions

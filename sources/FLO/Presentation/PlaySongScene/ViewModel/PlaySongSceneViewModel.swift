@@ -23,15 +23,14 @@ protocol PlaySongSceneViewModelInput {
 protocol PlaySongSceneViewModelOutput {
     var songDTO: SongDTO? {get set}
     var songSubject: PassthroughSubject<SongDTO, Never> { get set }
+    func syncLyrics(time: CMTime, inputTimeType: TimeType) -> [(String, HighlighType)]
 }
 
 typealias PlaySongSceneViewModelInOutput = PlaySongSceneViewModelInput & PlaySongSceneViewModelOutput
 
 final class PlaySongSceneViewModel: PlaySongSceneViewModelInOutput, PlayableViewModel {
-    
     private let fetchSongUseCase: FetchSongUseCase
     private let actions: PlaySongSceneViewModelActions
-    
     var playerManager: PlayerManager
     var songDTO: SongDTO?
     var songSubject = PassthroughSubject<SongDTO, Never>()
