@@ -10,6 +10,8 @@
 - Combine
 - Clean Architecture with MVVM
 - Coordinator, Delegate Pattern
+- XCTest
+- SwiftLint
   
 ## 프로젝트 요구사항
 - 언어: Swift
