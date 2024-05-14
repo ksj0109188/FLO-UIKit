@@ -6,30 +6,45 @@
 //
 
 import XCTest
+import Combine
+import AVKit
+@testable import FLO
 
-final class PlaySongViewModel: XCTestCase {
-
+final class PlaySongViewModelTest: XCTestCase {
+    var songDTO: SongDTO!
+    var subscriptions = Set<AnyCancellable>()
+    
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        let expectation = XCTestExpectation(description: "Fetch song data")
+        let usecase = FetchSongUseCase(songWebRepository: SongWebRepositoryMock())
+        
+        usecase.fetchData()
+            .sink{
+                _ in expectation.fulfill()
+            }receiveValue: { [weak self] songDTO in
+                XCTAssertNotNil(songDTO, "")
+                self?.songDTO = songDTO
+            }
+            .store(in: &subscriptions)
+        
+        wait(for: [expectation], timeout: 5.0)
     }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    
+    func testPlaySongSceneViewModel_withSyncLyrics() {
+        //given
+        let usecaseMock = FetchSongUseCase(songWebRepository: SongWebRepositoryMock())
+        let playManagerMock = PlayerManager()
+        let actionsMock = PlaySongSceneViewModelActions { _, _ in }
+        
+        var viewModelMock: PlaySongSceneViewModelInOutput = PlaySongSceneViewModel(fetchSongUseCase: usecaseMock, playerManager: playManagerMock, actions: actionsMock)
+        viewModelMock.songDTO = songDTO
+        let time = CMTime(value: CMTimeValue(0.0), timescale: 1)
+        
+        //when
+        let lyrics = viewModelMock.syncLyrics(time: time, inputTimeType: .seconds)
+        
+        //then
+        XCTAssertEqual(lyrics.count == 2, true, "syncLyrics method must return tuple which has two count")
     }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
+    
 }

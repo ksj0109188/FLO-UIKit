@@ -6,30 +6,52 @@
 //
 
 import XCTest
+import Combine
+import AVKit
+@testable import FLO
 
 final class PlayerManagerTest: XCTestCase {
-
+    var playerManagerMock: playerMangerInOutput! = nil
+    var subscriptions = Set<AnyCancellable>()
+    
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        playerManagerMock = PlayerManager()
+        let url = URL(string: AppConfigurations().apiBaseURL)!
+        playerManagerMock.configure(url: url)
     }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    
+    func testPlayerManager_PlayerStart() throws {
+        // given
+        var isPaused: Bool = true
+        playerManagerMock.isPausedSubject
+            .sink {
+                print("check", $0)
+                isPaused = $0
+            }
+            .store(in: &subscriptions)
+        
+        //when
+        playerManagerMock.togglePlayPause()
+        
+        //then
+        XCTAssertFalse(isPaused) //isPaused true시 재생 실패
     }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    
+    func testPlayerManager_PlayerStop() throws {
+        // given
+        var isPaused: Bool = false
+        playerManagerMock.isPausedSubject
+            .sink {
+                print("check", $0)
+                isPaused = $0
+            }
+            .store(in: &subscriptions)
+        
+        //when
+        playerManagerMock.togglePlayPause()
+        playerManagerMock.togglePlayPause()
+        
+        //then
+        XCTAssertTrue(isPaused)
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
 }

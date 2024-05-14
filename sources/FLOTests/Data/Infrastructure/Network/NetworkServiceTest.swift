@@ -10,7 +10,7 @@ import Combine
 @testable import FLO
 
 ///note: 네트워크 전송계층 실패/성공 테스트
-final class NetworkServicceTest: XCTestCase {
+final class NetworkServiceTest: XCTestCase {
     var subscriptions = Set<AnyCancellable>()
     
     final class ErrorWebRepositryMock: WebRepository {
@@ -22,7 +22,7 @@ final class NetworkServicceTest: XCTestCase {
     }
     
     final class SuccessWebRepositryMock: WebRepository {
-        var baseURL: String = "https://grepp-programmers-challenges.s3.ap-northeast-2.amazonaws.com/2020-flo/song.json"
+        var baseURL: String = AppConfigurations().apiBaseURL
         
         func request() -> AnyPublisher<FLO.SongDTO, any Error>  {
             call()

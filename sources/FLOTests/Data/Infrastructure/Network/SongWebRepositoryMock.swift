@@ -6,3 +6,15 @@
 //
 
 import Foundation
+import Combine
+@testable import FLO
+
+final class SongWebRepositoryMock: SongWebRepository {
+    var baseURL: String = AppConfigurations().apiBaseURL
+    
+    func loadSong() -> AnyPublisher<FLO.SongDTO, any Error> {
+        call()
+    }
+
+}
+
