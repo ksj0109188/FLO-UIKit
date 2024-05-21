@@ -82,7 +82,7 @@ final class PlaySongSceneViewController: UIViewController {
             playInfoView.topAnchor.constraint(equalTo: safeArea.topAnchor, constant: padding),
             playInfoView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             playInfoView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            playInfoView.heightAnchor.constraint(equalToConstant: viewFrame.height / 3)
+            playInfoView.heightAnchor.constraint(equalToConstant: viewFrame.height / 2.5)
         ])
         
         NSLayoutConstraint.activate([

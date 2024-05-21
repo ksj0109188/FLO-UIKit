@@ -23,10 +23,6 @@ class PlayInfoView: UIView {
     
     private lazy var albumCover: UIImageView = {
         let image = UIImageView(image: UIImage(systemName: "photo.circle.fill"))
-        image.layer.cornerRadius = 75
-        image.layer.borderWidth = 3
-        image.clipsToBounds = true
-        image.contentMode = .scaleToFill
         image.translatesAutoresizingMaskIntoConstraints = false
         
         return image
@@ -96,25 +92,29 @@ class PlayInfoView: UIView {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] image in
                 self?.albumCover.image = image
+                self?.albumCover.layer.cornerRadius = (self?.albumCover.frame.size.width ?? 0) / 2
+                self?.albumCover.layer.masksToBounds = true
+                self?.albumCover.contentMode = .scaleToFill
             })
             .store(in: &subscriptions)
     }
     
-    
     func setupConstraints() {
+        let safeArea = safeAreaLayoutGuide
         let padding = 20.0
+        
         NSLayoutConstraint.activate([
-            topInfoView.topAnchor.constraint(equalTo: topAnchor),
-            topInfoView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            topInfoView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            topInfoView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.3)
+            topInfoView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            topInfoView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            topInfoView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            topInfoView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.4)
         ])
 
         NSLayoutConstraint.activate([
             albumCover.topAnchor.constraint(equalTo: topInfoView.bottomAnchor, constant: padding),
-            albumCover.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 100),
-            albumCover.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -100),
-            albumCover.bottomAnchor.constraint(equalTo: bottomAnchor),
+            albumCover.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
+            albumCover.widthAnchor.constraint(equalToConstant: 150),
+            albumCover.heightAnchor.constraint(equalToConstant: 150),
             
         ])
     }
