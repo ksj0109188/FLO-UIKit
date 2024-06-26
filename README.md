@@ -32,7 +32,7 @@
 - 전체 가사 화면 닫기 버튼이 있습니다.
 - 현재 재생 중인 부분의 가사가 하이라이팅 됩니다.
 
-### Architectrue
+### Architecture
  <img width="1140" alt="image" src="https://github.com/ksj0109188/FLO-UIKit/assets/48472569/4ba6e4fb-29a1-4a4b-9af9-457d64751570">
 
 ### Foldering
