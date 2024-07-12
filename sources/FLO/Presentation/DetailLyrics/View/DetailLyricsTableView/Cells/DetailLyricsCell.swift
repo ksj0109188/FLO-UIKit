@@ -9,6 +9,7 @@ import UIKit
 
 class DetailLyricsCell: UITableViewCell {
     static let reuseIdentifier = String(describing: DetailLyricsCell.self)
+    private var widthSize: CGFloat = 0.0
     
     private lazy var lyricsLabel: UILabel = {
         let label = UILabel()
@@ -23,11 +24,12 @@ class DetailLyricsCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.backgroundColor = .black
         setupViews()
-        setupConstraints()
     }
     
-    func configure(lyrics: String) {
+    func configure(lyrics: String, widthSize: CGFloat) {
         lyricsLabel.text = lyrics
+        self.widthSize = widthSize
+        setupConstraints()
     }
     
     required init?(coder: NSCoder) {
@@ -43,7 +45,7 @@ class DetailLyricsCell: UITableViewCell {
             lyricsLabel.topAnchor.constraint(equalTo: topAnchor),
             lyricsLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
             lyricsLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            lyricsLabel.trailingAnchor.constraint(equalTo: trailingAnchor)
+            lyricsLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -widthSize)
         ])
     }
     

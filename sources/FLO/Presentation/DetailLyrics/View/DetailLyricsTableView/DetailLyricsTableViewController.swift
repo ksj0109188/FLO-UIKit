@@ -38,6 +38,7 @@ class DetailLyricsTableViewController: UIViewController {
         tableView.backgroundColor = .black
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.indicatorStyle = .white
         
         return tableView
     }()
@@ -73,7 +74,7 @@ class DetailLyricsTableViewController: UIViewController {
         NSLayoutConstraint.activate([
             detailLyricsSceneSidebarView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             detailLyricsSceneSidebarView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            detailLyricsSceneSidebarView.widthAnchor.constraint(equalToConstant: view.bounds.width / 5),
+            detailLyricsSceneSidebarView.widthAnchor.constraint(equalToConstant: sidebarWidth),
             detailLyricsSceneSidebarView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ])
         
@@ -115,7 +116,7 @@ extension DetailLyricsTableViewController: UITableViewDelegate {
         let Lyrics = viewModel.songDTO.transformedLyrics
         let timeLine = viewModel.songDTO.timeLineLyrics
         
-        cell.configure(lyrics: Lyrics[timeLine[indexPath.row]] ?? "")
+        cell.configure(lyrics: "Lyrics[timeLine[indexPath.rowLyrics[timeLine[indexPath.row", widthSize: sidebarWidth)
         
         if indexPath.row == focusedLyricsIndex {
             cell.highlight()
