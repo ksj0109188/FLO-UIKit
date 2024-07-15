@@ -17,7 +17,6 @@ protocol PlaySongFlowCoordinatorDependencies {
 final class PlaySongFlowCoordinator {
     private weak var navigationController: UINavigationController?
     private let dependencies: PlaySongFlowCoordinatorDependencies
-    private weak var detailLyricsSceneViewController: DetailLyricsSceneViewController?
     
     init(navigationController: UINavigationController, dependencies: PlaySongFlowCoordinatorDependencies) {
         self.navigationController = navigationController
@@ -33,7 +32,6 @@ final class PlaySongFlowCoordinator {
     private func showDetailLyrics(songDTO: SongDTO, playerManager: PlayerManager) {
         let actions = DetailLyricsViewModelActions(dismissDetailLyricsView: dismissDetailLyricsView)
         let vc = dependencies.makeDetailLyricsSceneViewController(songDTO: songDTO, playerManager: playerManager, actions: actions)
-        detailLyricsSceneViewController = vc
         
         navigationController?.pushViewController(vc, animated: false)
     }

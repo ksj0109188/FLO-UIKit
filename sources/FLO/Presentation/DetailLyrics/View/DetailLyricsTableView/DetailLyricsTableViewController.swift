@@ -116,7 +116,7 @@ extension DetailLyricsTableViewController: UITableViewDelegate {
         let Lyrics = viewModel.songDTO.transformedLyrics
         let timeLine = viewModel.songDTO.timeLineLyrics
         
-        cell.configure(lyrics: "Lyrics[timeLine[indexPath.rowLyrics[timeLine[indexPath.row", widthSize: sidebarWidth)
+        cell.configure(lyrics: Lyrics[timeLine[indexPath.row]] ?? "", widthSize: sidebarWidth)
         
         if indexPath.row == focusedLyricsIndex {
             cell.highlight()
