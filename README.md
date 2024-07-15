@@ -82,8 +82,8 @@ TableView의 가사가 StackView 영역과 겹치는 이슈가 있었지만, 가
  ```
 
 #### [결과]
-<img width="424" alt="image" src="https://github.com/user-attachments/assets/4203502a-1f6d-4641-acad-ffb5fa14308a">
-가사길이가 아무리 길어도 조정되는 모습입니다.
+<img width="424" alt="image" src="https://github.com/user-attachments/assets/4203502a-1f6d-4641-acad-ffb5fa14308a"><br>
+✅가사길이가 아무리 길어도 조정되는 모습입니다.
 
 #### [배운점]
 SwiftUI로 개발 했다면, 오히려 더 많은 고민과 서브뷰들이 탄생 했을 거 같다는 생각을 했습니다. 
