@@ -39,20 +39,24 @@
 ### 4-1. 가사 상세화면 커스텀뷰
 #### [이슈]
 가사정보 표출과 동시에 사용자가 상호 작용 할 수 있는 컴포넌트로 TableView를 선택했습니다. 
-동시에 토글버튼을 활용해 TableView를 컨트롤 할 수 있는 '재생구간 선택' 기능이 필요 했고 단순히 영역분리를 통해 구현하면 된다 생각했습니다.
-하지만 TableView에 Scroll Indicator표출이 디바이스 맨 오른쪽에 위치해야하는 문제가 있었고 단순 영역분리는 Indicator 원하는 위치가 아니였습니다.
+동시에 토글버튼을 활용해 TableView를 컨트롤할 수 있는 '재생구간 선택' 기능이 필요했고 단순히 영역분리를 통해 구현 생각했습니다.
+하지만 TableView에 Scroll Indicator표출이 디바이스 맨 오른쪽에 위치해야하는 문제가 있었고 단순 영역분리는 Indicator 원하는 위치가 아니었습니다.
+
 #### [해결과정]
-<img width="581" alt="image" src="https://github.com/user-attachments/assets/1c90f40c-0bce-4a26-a611-466a6a02c963"><br>
-Xcode View Hiearchy Debug를 활용해 View의 구성을 시각화 하며 고민했습니다. TableView의 넓이는 디바이스 크기만큼, TableView 위에 Toggle 버튼을 포함한 StackView 위치 하는 것으로 해결했습니다.
+<div align="center">
+  <img width="581" alt="image" src="https://github.com/user-attachments/assets/1c90f40c-0bce-4a26-a611-466a6a02c963"><br>
+</div>
+Xcode view hierarchy debug를 활용해 View의 구성을 시각화하며 고민했습니다. TableView의 넓이는 디바이스 크기만큼, TableView 위에 Toggle 버튼을 포함한 StackView 위치하는 것으로 해결했습니다.
 TableView의 가사가 StackView 영역과 겹치는 이슈가 있었지만, 가사의 최대 길이를 StackView Leading영역까지 조정하는 것으로 해결했습니다.
 
 ```swift
-      // TableView UITableViewDelegate
+    // TableView UITableViewDelegate
+    // TableView에서 가사 Cell 생성 코드입니다.
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: DetailLyricsCell.reuseIdentifier, for: indexPath) as? DetailLyricsCell else { return UITableViewCell() }
         let Lyrics = viewModel.songDTO.transformedLyrics
         let timeLine = viewModel.songDTO.timeLineLyrics
-        
+        //가사 셀 생성과 동시에 길이를 정의합니다.
         cell.configure(lyrics: Lyrics[timeLine[indexPath.row]] ?? "", widthSize: sidebarWidth)
         
         if indexPath.row == focusedLyricsIndex {
@@ -65,6 +69,7 @@ TableView의 가사가 StackView 영역과 겹치는 이슈가 있었지만, 가
     } 
     
     // TableCell
+    // 정의된 길이로 AutoLayout설정한 코드입니다.
     func configure(lyrics: String, widthSize: CGFloat) {
         lyricsLabel.text = lyrics
         self.widthSize = widthSize
@@ -79,42 +84,59 @@ TableView의 가사가 StackView 영역과 겹치는 이슈가 있었지만, 가
             lyricsLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -widthSize)
         ])
     }
- ```
 
+ ```
 #### [결과]
-<img width="424" alt="image" src="https://github.com/user-attachments/assets/4203502a-1f6d-4641-acad-ffb5fa14308a"><br>
+<div align="center">
+  <img width="270" alt="image" src="https://github.com/user-attachments/assets/4203502a-1f6d-4641-acad-ffb5fa14308a"><br>
+</div>
 ✅가사길이가 아무리 길어도 조정되는 모습입니다.
 
 #### [배운점]
-SwiftUI로 개발 했다면, 오히려 더 많은 고민과 서브뷰들이 탄생 했을 거 같다는 생각을 했습니다. 
-비록 현재 SwiftUI가 최신 트렌드이고 Apple이 적극적인 업데이트가 있지만, UIKit을 안 쓸 수는 없다고 생각하게 되었습니다. 
-또한 커스텀 뷰를 개발하며 TableView 사용법과 View Hiearchy Debug 사용법을 자세히 알게되었습니다.
+SwiftUI로 개발했다면, 오히려 더 많은 고민과 서브뷰들이 탄생했을 거 같다는 생각을 했습니다. 
+비록 현재 SwiftUI가 최신 트렌드이고 Apple의 적극적인 업데이트가 있지만, UIKit을 안 쓸 수는 없다고 생각하게 되었습니다. 
+또한 커스텀 뷰를 개발하며 TableView 사용법과 View Hiearchy Debug 사용법을 자세히 알게 되었습니다.
+
 
 ### 4-2. 가사상세화면과 메인화면 동기화
 #### [이슈]
-가사상세 화면에서 재생중인 구간, 하이라이트되어야 하는 가사, 음악 재생상태 및 Slider 진행률이 메인뷰(부모뷰)와 동기화가 필요한 이슈가 있었습니다.
+가사상세 화면에서 재생 중인 구간, 하이라이트 되어야 하는 가사, 음악 재생상태 및 Slider 진행률이 메인뷰(부모뷰)와 동기화가 필요한 이슈가 있었습니다.
 #### [해결과정]
-MVVM-C 패턴이 적용된 프로젝트로, 참조타입을 활용개 인스턴스를 공유하면 동기화 기능이 가능할 거라 생각했습니다.
+MVVM-C 패턴이 적용된 프로젝트로, 참조타입을 활용해 인스턴스를 공유하면 동기화 기능이 가능하다 생각했습니다.
 코드는 다음과 같습니다.
-```
+```swift
 //coordinator에 적용된 화면 흐름입니다.
    private func showDetailLyrics(songDTO: SongDTO, playerManager: PlayerManager) {
         let actions = DetailLyricsViewModelActions(dismissDetailLyricsView: dismissDetailLyricsView)
+        // 주입된 위존성을 기반으로 ViewController생성
         let vc = dependencies.makeDetailLyricsSceneViewController(songDTO: songDTO, playerManager: playerManager, actions: actions)
-        
+        // 뷰 표출
         navigationController?.pushViewController(vc, animated: false)
     }
+
 // DIContainer에서 의존성 주입하는 코드입니다.
+// 파라미터로 playerManager와 songDTO를 입력받습니다. 인스턴스를 공유하기 위해 클래스 타입으로 지정했으며 이를 기반으로 서브뷰인 DetailLyricsSceneViewController를 생성합니다.
+func makeDetailLyricsSceneViewController(songDTO: SongDTO, playerManager: PlayerManager, actions: DetailLyricsViewModelActions) -> DetailLyricsSceneViewController {
+    let vc = DetailLyricsSceneViewController()
+    vc.create(viewModel: makeDetailLyricsTableViewModel(songDTO: songDTO, playerManager: playerManager, actions: actions))
+    
+    return vc
+}
+
 func makeDetailLyricsTableViewModel(songDTO: SongDTO, playerManager: PlayerManager, actions: DetailLyricsViewModelActions) -> DetailLyricsViewModel {
         return DetailLyricsViewModel(songDTO: songDTO, playerManger: playerManager, actions: actions)
     }
 ```
+
 #### [결과]
-<img width="270" alt="image" src="https://github.com/user-attachments/assets/7f2d23f2-11ba-46be-8c98-2a2613c95683">
-<img width="270" alt="image" src="https://github.com/user-attachments/assets/c433675d-d2aa-4543-9caa-60032434c765">
+<div align="center">
+  <img width="270" alt="image" src="https://github.com/user-attachments/assets/215dbe73-8f3e-48ce-b8cd-f0128c35a9c6"><br>
+</div>
+✅가사구간 클릭 및 재생구간도 뷰와 서브뷰간 동기화 됩니다.
 
 #### [배운점]
-참조타입과 MVVM-C 패턴을 어떻게 활용해야 하는지 이해도가 높아졌습니다.
+참조타입과 MVVM-C 패턴을 어떻게 활용해야 하는지 고민하며 이해도가 생긴 것 같습니다. 또한 해당 프로젝트에선 1:1 관계를 통해 인스턴스를 공유하지만, 만약 여러
+뷰가 존재한다면 "DeadLock 외 Race Condition에 대한 문제발생 가능성"을 생각했습니다.
 
 ### Foldering
 ```
