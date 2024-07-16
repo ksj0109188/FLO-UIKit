@@ -139,7 +139,7 @@ func makeDetailLyricsTableViewModel(songDTO: SongDTO, playerManager: PlayerManag
 참조타입과 MVVM-C 패턴을 어떻게 활용해야 하는지 고민하며 이해도가 생긴 것 같습니다. 또한 해당 프로젝트에선 1:1 관계를 통해 인스턴스를 공유하지만, 만약 여러
 뷰가 존재한다면 "DeadLock 외 Race Condition에 대한 문제발생 가능성"을 생각했습니다.
 
-### Foldering
+## 2. Foldering
 ```
 FLO-UIKit
 └─ sources
