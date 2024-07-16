@@ -89,8 +89,9 @@ TableView의 가사가 StackView 영역과 겹치는 이슈가 있었지만, 가
 #### [결과]
 <div align="center">
   <img width="270" alt="image" src="https://github.com/user-attachments/assets/4203502a-1f6d-4641-acad-ffb5fa14308a"><br>
+  ✅가사길이가 아무리 길어도 조정되는 모습입니다.
 </div>
-✅가사길이가 아무리 길어도 조정되는 모습입니다.
+
 
 #### [배운점]
 SwiftUI로 개발했다면, 오히려 더 많은 고민과 서브뷰들이 탄생했을 거 같다는 생각을 했습니다. 
@@ -131,8 +132,8 @@ func makeDetailLyricsTableViewModel(songDTO: SongDTO, playerManager: PlayerManag
 #### [결과]
 <div align="center">
   <img width="270" alt="image" src="https://github.com/user-attachments/assets/215dbe73-8f3e-48ce-b8cd-f0128c35a9c6"><br>
+  ✅가사구간 클릭 및 재생구간도 뷰와 서브뷰간 동기화 됩니다.
 </div>
-✅가사구간 클릭 및 재생구간도 뷰와 서브뷰간 동기화 됩니다.
 
 #### [배운점]
 참조타입과 MVVM-C 패턴을 어떻게 활용해야 하는지 고민하며 이해도가 생긴 것 같습니다. 또한 해당 프로젝트에선 1:1 관계를 통해 인스턴스를 공유하지만, 만약 여러
