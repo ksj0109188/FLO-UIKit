@@ -39,11 +39,11 @@
 ### 4-1. 가사 상세화면 커스텀뷰
 #### [이슈]
 가사정보 표출과 동시에 사용자가 상호 작용 할 수 있는 컴포넌트로 TableView를 선택했습니다. 
-동시에 토글버튼을 활용해 TableView를 컨트롤 할 수 있는 재생구간 선택하기 기능이 필요 했고 단순히 영역분리를 통해 구현하면 된다 생각했습니다.
+동시에 토글버튼을 활용해 TableView를 컨트롤 할 수 있는 '재생구간 선택' 기능이 필요 했고 단순히 영역분리를 통해 구현하면 된다 생각했습니다.
 하지만 TableView에 Scroll Indicator표출이 디바이스 맨 오른쪽에 위치해야하는 문제가 있었고 단순 영역분리는 Indicator 원하는 위치가 아니였습니다.
 #### [해결과정]
 <img width="581" alt="image" src="https://github.com/user-attachments/assets/1c90f40c-0bce-4a26-a611-466a6a02c963"><br>
-Xcode View Hiearchy Debug를 활용해 TableView의 넓이는 디바이스 크기만큼, TableView 위에 Toggle 버튼을 포함한 StackView 위치 하는 것으로 해결했습니다.
+Xcode View Hiearchy Debug를 활용해 View의 구성을 시각화 하며 고민했습니다. TableView의 넓이는 디바이스 크기만큼, TableView 위에 Toggle 버튼을 포함한 StackView 위치 하는 것으로 해결했습니다.
 TableView의 가사가 StackView 영역과 겹치는 이슈가 있었지만, 가사의 최대 길이를 StackView Leading영역까지 조정하는 것으로 해결했습니다.
 
 ```swift
@@ -82,12 +82,39 @@ TableView의 가사가 StackView 영역과 겹치는 이슈가 있었지만, 가
  ```
 
 #### [결과]
-<img width="424" alt="image" src="https://github.com/user-attachments/assets/4203502a-1f6d-4641-acad-ffb5fa14308a">
+<img width="424" alt="image" src="https://github.com/user-attachments/assets/4203502a-1f6d-4641-acad-ffb5fa14308a"><br>
+✅가사길이가 아무리 길어도 조정되는 모습입니다.
 
 #### [배운점]
 SwiftUI로 개발 했다면, 오히려 더 많은 고민과 서브뷰들이 탄생 했을 거 같다는 생각을 했습니다. 
 비록 현재 SwiftUI가 최신 트렌드이고 Apple이 적극적인 업데이트가 있지만, UIKit을 안 쓸 수는 없다고 생각하게 되었습니다. 
 또한 커스텀 뷰를 개발하며 TableView 사용법과 View Hiearchy Debug 사용법을 자세히 알게되었습니다.
+
+### 4-2. 가사상세화면과 메인화면 동기화
+#### [이슈]
+가사상세 화면에서 재생중인 구간, 하이라이트되어야 하는 가사, 음악 재생상태 및 Slider 진행률이 메인뷰(부모뷰)와 동기화가 필요한 이슈가 있었습니다.
+#### [해결과정]
+MVVM-C 패턴이 적용된 프로젝트로, 참조타입을 활용개 인스턴스를 공유하면 동기화 기능이 가능할 거라 생각했습니다.
+코드는 다음과 같습니다.
+```
+//coordinator에 적용된 화면 흐름입니다.
+   private func showDetailLyrics(songDTO: SongDTO, playerManager: PlayerManager) {
+        let actions = DetailLyricsViewModelActions(dismissDetailLyricsView: dismissDetailLyricsView)
+        let vc = dependencies.makeDetailLyricsSceneViewController(songDTO: songDTO, playerManager: playerManager, actions: actions)
+        
+        navigationController?.pushViewController(vc, animated: false)
+    }
+// DIContainer에서 의존성 주입하는 코드입니다.
+func makeDetailLyricsTableViewModel(songDTO: SongDTO, playerManager: PlayerManager, actions: DetailLyricsViewModelActions) -> DetailLyricsViewModel {
+        return DetailLyricsViewModel(songDTO: songDTO, playerManger: playerManager, actions: actions)
+    }
+```
+#### [결과]
+<img width="270" alt="image" src="https://github.com/user-attachments/assets/7f2d23f2-11ba-46be-8c98-2a2613c95683">
+<img width="270" alt="image" src="https://github.com/user-attachments/assets/c433675d-d2aa-4543-9caa-60032434c765">
+
+#### [배운점]
+참조타입과 MVVM-C 패턴을 어떻게 활용해야 하는지 이해도가 높아졌습니다.
 
 ### Foldering
 ```
