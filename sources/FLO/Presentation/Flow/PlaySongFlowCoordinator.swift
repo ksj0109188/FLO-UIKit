@@ -7,7 +7,7 @@
 
 import UIKit
 
-///note: PlaySongSceneDIContainer에서 PlaySongFlowCoordinator에 정의한 화면 전환시 의존성 주입 메소드 리스트
+///note: PlaySongSceneDIContainer에서 PlaySongFlowCoordinator에 정의한 의존성 주입 메소드 리스트
 protocol PlaySongFlowCoordinatorDependencies {
     func makeDetailLyricsSceneViewController(songDTO: SongDTO, playerManager: PlayerManager, actions: DetailLyricsViewModelActions) -> DetailLyricsSceneViewController
     func makePlaySongSceneViewController(actions: PlaySongSceneViewModelActions) -> PlaySongSceneViewController
