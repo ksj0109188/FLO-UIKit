@@ -35,7 +35,7 @@
 ## 3. Architecture
  <img width="1140" alt="image" src="https://github.com/ksj0109188/FLO-UIKit/assets/48472569/4ba6e4fb-29a1-4a4b-9af9-457d64751570">
 
-<h2 id="Trubleshooting("> 4. 트러블 슈팅 </h2>
+<h2 id="Trubleshooting"> 4. 트러블 슈팅 </h2>
 
 
 ### 4-1. 가사 상세화면 커스텀뷰
