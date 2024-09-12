@@ -43,7 +43,7 @@
 하지만 TableView에 Scroll Indicator표출이 디바이스 맨 오른쪽에 위치해야하는 문제가 있었고 단순 영역분리는 Indicator 원하는 위치가 아니었습니다.
 
 #### [해결과정]
-<div align="center">
+<div align="center" id="Trubble">
   <img width="581" alt="image" src="https://github.com/user-attachments/assets/1c90f40c-0bce-4a26-a611-466a6a02c963"><br>
 </div>
 Xcode view hierarchy debug를 활용해 View의 구성을 시각화하며 고민했습니다. TableView의 넓이는 디바이스 크기만큼, TableView 위에 Toggle 버튼을 포함한 StackView 위치하는 것으로 해결했습니다.
