@@ -35,7 +35,9 @@
 ## 3. Architecture
  <img width="1140" alt="image" src="https://github.com/ksj0109188/FLO-UIKit/assets/48472569/4ba6e4fb-29a1-4a4b-9af9-457d64751570">
 
-## 4. 트러블 슈팅
+<h2 id="Trubleshooting("> 4. 트러블 슈팅 </h2>
+
+
 ### 4-1. 가사 상세화면 커스텀뷰
 #### [이슈]
 가사정보 표출과 동시에 사용자가 상호 작용 할 수 있는 컴포넌트로 TableView를 선택했습니다. 
@@ -43,7 +45,7 @@
 하지만 TableView에 Scroll Indicator표출이 디바이스 맨 오른쪽에 위치해야하는 문제가 있었고 단순 영역분리는 Indicator 원하는 위치가 아니었습니다.
 
 #### [해결과정]
-<div align="center" id="Trubble">
+<div align="center">
   <img width="581" alt="image" src="https://github.com/user-attachments/assets/1c90f40c-0bce-4a26-a611-466a6a02c963"><br>
 </div>
 Xcode view hierarchy debug를 활용해 View의 구성을 시각화하며 고민했습니다. TableView의 넓이는 디바이스 크기만큼, TableView 위에 Toggle 버튼을 포함한 StackView 위치하는 것으로 해결했습니다.
